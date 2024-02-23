@@ -9,7 +9,6 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-
 import Image from "next/image";
 import { themes } from "@/constants";
 
@@ -28,7 +27,7 @@ const Theme = () => {
         >
           {mode === "light" ? (
             <Image
-              src="public/assets/icons/sun.svg"
+              src="/assets/icons/sun.svg"
               alt="sun"
               width={20}
               height={20}
@@ -36,7 +35,7 @@ const Theme = () => {
             />
           ) : (
             <Image
-              src="public/assets/icons/moon.svg"
+              src="/assets/icons/moon.svg"
               alt="moon"
               width={20}
               height={20}
@@ -44,6 +43,7 @@ const Theme = () => {
             />
           )}
         </MenubarTrigger>
+        
         <MenubarContent
           className="absolute
         right-[-3rem] mt-3 min-w-[120px]
