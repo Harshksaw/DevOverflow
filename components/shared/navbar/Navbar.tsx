@@ -1,24 +1,43 @@
-import { SignIn, SignedIn, UserButton } from "@clerk/nextjs";
+import { SignedIn, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
+import Theme from "./Theme";
+// import MobileNav from "./MobileNav";
+// import GlobalSearch from "../search/GlobalSearch";
 
 const Navbar = () => {
   return (
-    <nav className="fixed inset-x-0 top-0 z-50 flex h-16 border-b border-slate-200 bg-white/80 backdrop-blur-lg dark:border-slate-700 dark:bg-slate-900/80">
-      <Link href="/" className="flex items-center justify-center gap-1 ">
-        <Image src="/logo.png" alt="logo" width={23} height={23} />
-        <p className="h2-bold font-spaceGrotesk text-dark-100 dark:text-light-900 max-sm:hidden">
+    <nav
+      className="flex-between 
+        background-light900_dark200 fixed z-50 
+        w-full gap-5 p-6 shadow-light-300 
+        dark:shadow-none sm:px-12"
+    >
+      <Link href="/" className="flex items-center gap-1">
+        <Image
+          src="/assets/images/site-logo.svg"
+          width={23}
+          height={23}
+          alt="DevOverflow"
+        />
+        <p
+          className="h2-bold font-spaceGrotesk
+        text-dark-100 dark:text-light-900
+        max-sm:hidden"
+        >
           Dev <span className="text-primary-500">Overflow</span>
         </p>
       </Link>
-
-      <div className="flex-between gap-5 ">
+      {/* <GlobalSearch /> */}
+      <div className="flex-between gap-5">
+        <Theme />
         <SignedIn>
           <UserButton
             afterSignOutUrl="/"
             appearance={{
               elements: {
-                avatorBox: "h-10 w-10",
+                avatarBox: "h-10 w-10",
               },
               variables: {
                 colorPrimary: "#ff7000",
@@ -26,7 +45,10 @@ const Navbar = () => {
             }}
           />
         </SignedIn>
+        {/* <MobileNav /> */}
       </div>
     </nav>
   );
 };
+
+export default Navbar;
