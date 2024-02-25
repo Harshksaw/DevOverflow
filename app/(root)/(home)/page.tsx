@@ -1,13 +1,12 @@
-import Homefilters from "@/components/shared/Homefilters";
-import LocalSearchBar from "@/components/shared/search/LocalSearch";
-
 import { Button } from "@/components/ui/button";
-import { UserButton } from "@clerk/nextjs";
-import Link from "next/link";
-
-import NoResult from "@/components/shared/NoResult";
+import Filters from "@/components/shared/Filter";
 import HomeFilters from "@/components/home/HomeFilter";
+import { HomePageFilters } from "@/constants/filters";
+import Link from "next/link";
+import LocalSearchBar from "@/components/shared/search/LocalSearch";
+import NoResult from "@/components/shared/NoResult";
 import QuestionCard from "@/components/cards/QuestionCard";
+import { UserButton } from "@clerk/nextjs";
 
 const questions= [
   // Existing questions
@@ -89,11 +88,11 @@ export default function Home() {
           otherClasses="flex-1"
         />
 
-        {/* <Filter
+         <Filters
           filters={HomePageFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
           containerClasses="hidden max-md:flex"
-        /> */}
+        />
       </div>
 
       <HomeFilters/>
