@@ -1,6 +1,6 @@
-import LeftSidebar from "@/components/shared/LeftSidebar";
-import RightSidebar from "@/components/shared/RightSidebar";
-import Navbar from "@/components/shared/navbar/Navbar";
+import LeftSidebar from "@/download/components/shared/LeftSidebar";
+import RightSidebar from "@/download/components/shared/RightSidebar";
+import Navbar from "@/download/components/shared/navbar/Navbar";
 
 import React from "react";
 // import RightSidebar from "@/components/shared/sidebar/RightSidebar";

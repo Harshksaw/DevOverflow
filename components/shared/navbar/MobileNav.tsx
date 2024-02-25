@@ -5,12 +5,12 @@ import {
   SheetClose,
   SheetContent,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/download/components/ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
 import { SignedOut } from "@clerk/nextjs";
-import { Button } from "@/components/ui/button";
-import { sidebarLinks } from "@/constants";
+import { Button } from "@/download/components/ui/button";
+import { sidebarLinks } from "@/download/constants";
 import { usePathname } from "next/navigation";
 
 const NavContent = () => {
