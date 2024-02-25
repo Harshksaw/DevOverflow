@@ -50,6 +50,9 @@ const LocalSearchBar = ({
           className="cursor-pointer"
         />
       )}
+
+
+      
     </div>
   );
 };
