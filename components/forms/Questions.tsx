@@ -19,11 +19,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Badge } from "../ui/badge";
 
+const type:any = 'Create'
+
 const Questions = () => {
 
 
   // tiny MCE
   const editorRef = useRef(null);
+  const [isSubmitting , setIsSubmmitting] = React.useState(false);
+
   const log = () => {
     if (editorRef.current) {
       console.log(editorRef.current.getContent());
@@ -57,7 +61,7 @@ const Questions = () => {
     }else{
       form.trigger();
     }
-  }
+  }}
 
   const handleTagRemove = (tag: string, field: any)=>{
     const newTags = field.value.filter((t:string)=> t !== tag);
@@ -79,6 +83,20 @@ const Questions = () => {
   function onSubmit(values: z.infer<typeof QuestionSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    setIsSubmmitting(true);
+
+    try {
+      //make an asyn call to your API --> create a quation
+      //contain all form data
+
+      //navigate to home page
+    } catch (error) {
+      
+    }
+    finally{
+      setIsSubmmitting(false)
+    }
+
     console.log(values);
   }
 
@@ -124,33 +142,25 @@ const Questions = () => {
 
         {/* detailed explanation */}
         <FormField
-          // className
+
           control={form.control}
           name="explanation"
           render={({ field }) => (
-            <FormItem
-              className="flex w-full  gap-3 flex-col "
-            >
-              <FormLabel
-                className="paragraph-semibold text-dark400_light800"
-              >Detailed Expalanation of your Problem?
-                
+            <FormItem className="flex w-full flex-col gap-3">
+              <FormLabel className="paragraph-semibold text-dark400_light800">
+                Detailed explanation of your problem{" "}
                 <span className="text-primary-500">*</span>
-
               </FormLabel>
-
-              <FormControl
-                className="mt-3.5"
-              >
-
-                {/* Tiny mce */}
+              <FormControl className="mt-3.5">
                 <Editor
-                  apiKey={process.env.TINY_MCE}
+                  apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
                   onInit={(evt, editor) => {
                     // @ts-ignore
-                    editorRef.current = editor
+                    editorRef.current = editor;
                   }}
-                  initialValue="<p>This is the initial content of the editor.</p>"
+                  onBlur={field.onBlur}
+                  onEditorChange={(content) => field.onChange(content)}
+                  // initialValue={parsedQuestionDetails?.content || ""}
                   init={{
                     height: 350,
                     menubar: false,
@@ -170,24 +180,23 @@ const Questions = () => {
                       "insertdatetime",
                       "media",
                       "table",
+                      "wordcount",
                     ],
                     toolbar:
                       "undo redo | " +
                       "codesample | bold italic forecolor | alignleft aligncenter |" +
-                      "alignright alignjustify | bullist numlist",
-                    content_style: "body { font-family:Inter; font-size:16px }"
-                    // skin: theme === "dark" ? "oxide-dark" : "oxide",
-                    // content_css: theme === "dark" ? "dark" : "light",
+                      "alignright alignjustify | bullist numlist outdent indent",
+                    content_style: "body { font-family:Inter; font-size:16px }",
+                    // skin: mode === "dark" ? "oxide-dark" : "oxide",
+                    // content_css: mode === "dark" ? "dark" : "light",
                   }}
                 />
               </FormControl>
-              <FormDescription
-                className="body-regular mt-2.5 text-light-500"
-              >
-                Introduce the problem and expand on what you put in the title. Minimum 20 character
+              <FormDescription className="body-regular mt-2.5 text-light-500">
+                Introduces the problem and expand on what you put in the title.
+                Minimum 20 characters.
               </FormDescription>
-
-              <FormMessage className="text-red-400" />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
@@ -263,10 +272,29 @@ const Questions = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="primary-gradient w-full !text-light-800"
+        disabled={isSubmitting}
+
+        >
+          {
+            isSubmitting ? (
+              <>
+              {type === 'edit' ? 'Editing...'  : 'Posting...'}
+              </>
+            ): (
+              <>
+              {type === 'edit' ? 'Edit Question'  : 'Post Question'}
+              </>
+
+            )
+          }
+          
+          
+          </Button>
       </form>
     </Form>
   );
 };
+
 
 export default Questions;
