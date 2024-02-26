@@ -2,6 +2,8 @@ import { SignedIn } from '@clerk/nextjs';
 import Link from 'next/link';
 import React from 'react'
 import RenderTag from '../shared/RenderTag';
+import Metric from '../shared/Metric';
+import { formatAndDivideNumber, getTimestamp } from '@/download/lib/utils';
 
 
 interface QuestionProps {
@@ -43,7 +45,7 @@ const QuestionCard = (
 
         <div>
           <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
-            {/* {getTimestamp(createdAt)} */}
+            {getTimestamp(createdAt)}
           </span>
           <Link href={`/question/${_id}`}>
             <h3 className="sm:h3-semibold base-semibold text-dark200_light900 line-clamp-1 flex-1">
@@ -62,39 +64,48 @@ const QuestionCard = (
       </div>
 
       <div className="flex-between mt-6 w-full flex-wrap gap-3">
-        {/* <Metric
-          imgUrl={author.picture}
+        <Metric
+          // imgUrl={author.picture}
+          imgUrl = "/assets/icons/avator.svg"
           alt="user"
-          value={author.name}
+
+          // value={upvotes}
+          value={formatAndDivideNumber(upvotes.length)}
+
           title={` - asked ${getTimestamp(createdAt)}`}
           href={`/profile/${author._id}`}
           isAuthor
           textStyles="body-medium text-dark400_light700"
-        /> */}
+        />
 
-        {/* <div className="flex items-center gap-3 max-sm:flex-wrap max-sm:justify-start">
-          <Metric
+
+         <Metric
             imgUrl="/assets/icons/like.svg"
             alt="Upvotes"
             value={formatAndDivideNumber(upvotes.length)}
+
             title=" Votes"
             textStyles="small-medium text-dark400_light800"
           />
+
           <Metric
             imgUrl="/assets/icons/message.svg"
             alt="message"
             value={formatAndDivideNumber(answers.length)}
+
             title=" Answers"
             textStyles="small-medium text-dark400_light800"
           />
+
           <Metric
             imgUrl="/assets/icons/eye.svg"
             alt="eye"
             value={formatAndDivideNumber(views)}
+
             title=" Views"
             textStyles="small-medium text-dark400_light800"
           />
-        </div> */}
+
       </div>
     </div>
   )
