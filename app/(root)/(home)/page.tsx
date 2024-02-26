@@ -2,26 +2,25 @@
 
 
 
-import LocalSearchBar from "@/components/shared/search/LocalSearch";
+import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 
 
 import { Button } from "@/components/ui/button";
 import Filters from "@/components/shared/Filter";
-import HomeFilters from "@/components/home/HomeFilter";
+
 import { HomePageFilters } from "@/constants/filters";
 import Link from "next/link";
-import LocalSearchBar from "@/components/shared/search/LocalSearch";
-import NoResult from "@/components/shared/NoResult";
+
+// import NoResult from "@/components/shared/NoResult";
 
 import QuestionCard from "@/components/cards/QuestionCard";
 import { UserButton } from "@clerk/nextjs";
+import HomeFilters from "@/components/shared/home/HomeFilter";
 
 
-import QuestionCard from "@/components/cards/QuestionCard";
-import Filters from "@/components/shared/Filters";
 
-import { HomePageFilters } from "@/constants/filters";
-import HomeFilters from "@/components/home/HomeFilter";
+
+
 
 
 
@@ -119,7 +118,7 @@ export default function Home() {
         />
       </div>
 
-      <HomeFilters />
+      {/* <HomeFilters /> */}
 
       {/* // looping through questions */}
       <div className="mt-10 flex w-full flex-col gap-6">
