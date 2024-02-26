@@ -1,7 +1,8 @@
+import { BadgeCounts } from '@/types';
 // import qs from "query-string";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { BADGE_CRITERIA } from "@/download/constants";
+import { BADGE_CRITERIA } from "@/constants";
 // import { BadgeCounts } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {

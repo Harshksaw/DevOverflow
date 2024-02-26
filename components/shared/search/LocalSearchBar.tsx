@@ -11,7 +11,7 @@ interface LocalSearchBarProps {
   otherClasses: string;
 }
 
-const LocalSearchBar = ({
+const rLocalSearchBa = ({
   route,
   iconPosition,
   imgSrc,

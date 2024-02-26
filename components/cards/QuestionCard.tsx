@@ -3,14 +3,14 @@ import Link from 'next/link';
 import React from 'react'
 import RenderTag from '../shared/RenderTag';
 import Metric from '../shared/Metric';
-import { formatAndDivideNumber, getTimestamp } from '@/download/lib/utils';
+import { formatAndDivideNumber, getTimestamp } from '@/lib/utils';
 
 
 interface QuestionProps {
     _id: string;
     title: string;
     tags: {
-      _id: string;
+      _id: string | number;
       name: string;
     }[];
     author: {

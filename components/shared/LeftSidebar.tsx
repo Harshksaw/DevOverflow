@@ -1,5 +1,5 @@
 "use client";
-import { sidebarLinks } from "@/download/constants";
+
 import { usePathname } from "next/navigation";
 import React from "react";
 
@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { SignedOut } from "@clerk/nextjs";
 import { Button } from "../ui/button";
+import { sidebarLinks } from "@/constants";
 
 const LeftSidebar = () => {
   const pathname = usePathname();
