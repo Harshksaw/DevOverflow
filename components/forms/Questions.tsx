@@ -20,10 +20,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Badge } from "../ui/badge";
 import { createQuestion } from "@/lib/actions/question.action";
 import { z } from "zod";
+import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 
 const type:any = 'Create'
+interface Props{
+  mongoUserId: string;
+}
 
-const Questions = () => {
+
+const Question = ({mongoUserId}: Props) => {
+
+  const Router = useRouter();
+  const pathName = usePathname();
 
 
   // tiny MCE
@@ -89,10 +98,16 @@ const Questions = () => {
 
     try {
       //make an asyn call to your API --> create a quation
-      await createQuestion({})
+
     
       //contain all form data
-
+      await createQuestion({
+        title: values.title,
+        content: values.explanation,
+        tags: values.tags,
+        author: JSON.parse(mongoUserId),
+      })
+        Router.push('/');
       //navigate to home page
     } catch (error) {
 
@@ -303,4 +318,4 @@ const Questions = () => {
 };
 
 
-export default Questions;
+export default Question;
