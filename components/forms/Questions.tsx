@@ -18,6 +18,8 @@ import { QuestionSchema } from "@/lib/validation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Badge } from "../ui/badge";
+import { createQuestion } from "@/lib/actions/question.action";
+import { z } from "zod";
 
 const type:any = 'Create'
 
@@ -30,7 +32,7 @@ const Questions = () => {
 
   const log = () => {
     if (editorRef.current) {
-      console.log(editorRef.current.getContent());
+      // console.log(editorRef.current.getContent());
     }
   };
 
@@ -80,17 +82,20 @@ const Questions = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof QuestionSchema>) {
+  async function onSubmit(values: z.infer<typeof QuestionSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     setIsSubmmitting(true);
 
     try {
       //make an asyn call to your API --> create a quation
+      await createQuestion({})
+    
       //contain all form data
 
       //navigate to home page
     } catch (error) {
+
       
     }
     finally{
@@ -141,6 +146,7 @@ const Questions = () => {
         />
 
         {/* detailed explanation */}
+
         <FormField
 
           control={form.control}
@@ -161,6 +167,7 @@ const Questions = () => {
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
                   // initialValue={parsedQuestionDetails?.content || ""}
+                  initialValue=""
                   init={{
                     height: 350,
                     menubar: false,
