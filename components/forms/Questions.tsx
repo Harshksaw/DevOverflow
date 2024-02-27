@@ -148,7 +148,6 @@ const Questions = () => {
         {/* detailed explanation */}
 
         <FormField
-
           control={form.control}
           name="explanation"
           render={({ field }) => (
@@ -193,7 +192,7 @@ const Questions = () => {
                       "undo redo | " +
                       "codesample | bold italic forecolor | alignleft aligncenter |" +
                       "alignright alignjustify | bullist numlist outdent indent",
-                    content_style: "body { font-family:Inter; font-size:16px }",
+                    content_style: "body { font-family:Inter; font-size:16px }"
                     // skin: mode === "dark" ? "oxide-dark" : "oxide",
                     // content_css: mode === "dark" ? "dark" : "light",
                   }}
@@ -244,7 +243,7 @@ const Questions = () => {
                       {
                         field.value.map((tag:any)=>(
                           <Badge key={tag}
-                          clasName="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
+                          className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
                           onClick= {()=> handleTagRemove(tag, field)}
 
                           >

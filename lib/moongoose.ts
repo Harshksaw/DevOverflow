@@ -13,6 +13,7 @@ export const connectToDatabase = async () => {
     }
     try {
         const DB : any = process.env.MONGO_URL;
+        console.log('database connection ->>-->>-->>');
         await moongose.connect(DB, { dbName: 'devflow'});
         isConnected = true;
         console.log('database connection ->>-->>-->>');
