@@ -5,20 +5,19 @@ import { redirect } from 'next/navigation';
 import React from 'react'
 
 const page = async() => {
+  const { userId } = auth();
 
-  // const {userId} = auth();
-  //dummy data
+  if (!userId) return null;
 
-  const userId = "1234567"
+  const mongoUser = await getUserById({ userId });
   if(!userId) redirect('/sign-in')
-  const mongoUser = await getUserById({userId});
   console.log(mongoUser)
 
 
   return (
     <div>
         Ask Question
-        <Question mongoUserId = {JSON.stringify(mongoUser._id)} />
+        <Question  mongoUserId={JSON.stringify(mongoUser._id)} />
       
     </div>
   )

@@ -5,6 +5,9 @@ import Question from "@/database/question.model";
 
 import { connectToDatabase } from "../moongoose"
 import Tag from "@/database/tag.model";
+import User from "@/database/user.models";
+import { GetQuestionsParams } from "./shared.types";
+import { revalidatePath } from "next/cache";
 
 
 export async function createQuestion(params: any) {
@@ -41,10 +44,32 @@ export async function createQuestion(params: any) {
             tags: { $each : tagDocuments }
         }})
 
+        revalidatePath(path)
+
     } catch (error) {
         console.log(error, "in question.action.ts");
 
         
     }
     
+}
+
+export async function getQuestions(params: GetQuestionsParams) {
+    try {
+        connectToDatabase();
+
+            const questions = await Question.find({})
+            .populate({path:'tags', model: Tag})
+            .populate({path: 'author', model: User})
+            .sort({createdAt: -1   })
+            
+
+            // return questions;
+            return {questions}
+
+      
+    } catch (error) {
+        console.log(error, "in question.action.ts");
+        
+    }
 }
