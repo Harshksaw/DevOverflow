@@ -5,26 +5,22 @@ import RenderTag from '../shared/RenderTag';
 import Metric from '../shared/Metric';
 import { formatAndDivideNumber, getTimestamp } from '@/lib/utils';
 
-
 interface QuestionProps {
+  _id: string;
+  title: string;
+  tags: Array<{ _id: string; name: string }>;
+  author: {
     _id: string;
-    title: string;
-    tags: {
-      _id: string | number;
-      name: string;
-    }[];
-    author: {
-      _id: string;
-      name: string;
-      picture: string;
-      clerkId: string;
-    };
-    upvotes: string[];
-    views: number;
-    answers: Array<object>;
-    createdAt: Date;
-    clerkId?: string | null;
-  }
+    name: string;
+    picture: string;
+    clerkId: string;
+  };
+  upvotes: string[];
+  views: number;
+  answers: Array<object>;
+  createdAt: Date;
+  clerkId?: string | null;
+}
   
 const QuestionCard = (
     {

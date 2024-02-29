@@ -10,9 +10,9 @@ const hotQuestions =[
     {_id:5 , title: 'How to use React Router', votes: 10, answers: 5},
 ]
 const popularTags = [
-    {_id:1, name:"React",totalQuestions: 10,},
-    {_id:2, name:"TypeScript",totalQuestions: 5,}, {_id:3, name:"Node.js",totalQuestions: 7,},
-    {_id:4, name:"Php",totalQuestions: 5,}, {_id:5, name:"C++",totalQuestions: 7,}
+    {_id:"1", name:"React",totalQuestions: 10,},
+    {_id:"2", name:"TypeScript",totalQuestions: 5,}, {_id:"3", name:"Node.js",totalQuestions: 7,},
+    {_id:"4", name:"Php",totalQuestions: 5,}, {_id:"5", name:"C++",totalQuestions: 7,}
 
 ]
 

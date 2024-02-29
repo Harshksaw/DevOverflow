@@ -1,18 +1,16 @@
-import { BadgeCounts } from '@/types';
-// import qs from "query-string";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import qs from "query-string";
 import { BADGE_CRITERIA } from "@/constants";
-// import { BadgeCounts } from "@/types";
+import { BadgeCounts } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
-
 
 export const getTimestamp = (createdAt: Date): string => {
   const now = new Date();
-  const timeDifference = now.getTime() - createdAt.getTime();
+  const elapsedTimeInMilliseconds = now.getTime() - createdAt.getTime();
 
   // Define time intervals in milliseconds
   const minute = 60 * 1000;
@@ -22,71 +20,76 @@ export const getTimestamp = (createdAt: Date): string => {
   const month = 30 * day;
   const year = 365 * day;
 
-  if (timeDifference < minute) {
-    const seconds = Math.floor(timeDifference / 1000);
+  if (elapsedTimeInMilliseconds < minute) {
+    const seconds = Math.floor(elapsedTimeInMilliseconds / 1000);
     return `${seconds} ${seconds === 1 ? "second" : "seconds"} ago`;
-  } else if (timeDifference < hour) {
-    const minutes = Math.floor(timeDifference / minute);
+  } else if (elapsedTimeInMilliseconds < hour) {
+    const minutes = Math.floor(elapsedTimeInMilliseconds / minute);
     return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
-  } else if (timeDifference < day) {
-    const hours = Math.floor(timeDifference / hour);
+  } else if (elapsedTimeInMilliseconds < day) {
+    const hours = Math.floor(elapsedTimeInMilliseconds / hour);
     return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
-  } else if (timeDifference < week) {
-    const days = Math.floor(timeDifference / day);
+  } else if (elapsedTimeInMilliseconds < week) {
+    const days = Math.floor(elapsedTimeInMilliseconds / day);
     return `${days} ${days === 1 ? "day" : "days"} ago`;
-  } else if (timeDifference < month) {
-    const weeks = Math.floor(timeDifference / week);
+  } else if (elapsedTimeInMilliseconds < month) {
+    const weeks = Math.floor(elapsedTimeInMilliseconds / week);
     return `${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
-  } else if (timeDifference < year) {
-    const months = Math.floor(timeDifference / month);
+  } else if (elapsedTimeInMilliseconds < year) {
+    const months = Math.floor(elapsedTimeInMilliseconds / month);
     return `${months} ${months === 1 ? "month" : "months"} ago`;
   } else {
-    const years = Math.floor(timeDifference / year);
+    const years = Math.floor(elapsedTimeInMilliseconds / year);
     return `${years} ${years === 1 ? "year" : "years"} ago`;
   }
 };
 
-export const formatAndDivideNumber = (num: number): string => {
-  if (num >= 1000000) {
-    const formattedNum = (num / 1000000).toFixed(1);
-    return `${formattedNum}M`;
-  } else if (num >= 1000) {
-    const formattedNum = (num / 1000).toFixed(1);
-    return `${formattedNum}K`;
+export const formatAndDivideNumber = (number: number): string => {
+  if (number >= 1000000) {
+    // If the number is in millions (1,000,000 or more)
+    const millions = (number / 1000000).toFixed(2);
+    return `${millions}M`;
+  } else if (number >= 1000) {
+    // If the number is in thousands (1,000 or more)
+    const thousands = (number / 1000).toFixed(2);
+    return `${thousands}K`;
   } else {
-    return num.toString() as string;
+    // If the number is less than 1,000, simply return the number as is
+    return `${number}`;
   }
 };
 
-export const getJoinedDate = (date: Date): string => {
-  // Extract the month and year from the Date object
+export function getJoinedDate(date: Date): string {
   const month = date.toLocaleString("default", { month: "long" });
   const year = date.getFullYear();
 
-  // Create the joined date string (e.g., "September 2023")
+  // Create joined date string (ex. "September 2023")
   const joinedDate = `${month} ${year}`;
 
   return joinedDate;
-};
+}
 
-interface URLQueryParams {
+interface UrlQueryParams {
   params: string;
   key: string;
   value: string | null;
 }
 
-export const formUrlQuery = ({ params, key, value }: URLQueryParams) => {
-  const currentURL = qs.parse(params);
+export const formUrlQuery = ({ params, key, value }: UrlQueryParams) => {
+  const currentUrl = qs.parse(params);
 
-  currentURL[key] = value;
+  currentUrl[key] = value;
 
   return qs.stringifyUrl(
-    { url: window.location.pathname, query: currentURL },
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
     { skipNull: true }
   );
 };
 
-interface RemoveURLQueryParams {
+interface RemoveUrlQueryParams {
   params: string;
   keysToRemove: string[];
 }
@@ -94,13 +97,18 @@ interface RemoveURLQueryParams {
 export const removeKeysFromQuery = ({
   params,
   keysToRemove,
-}: RemoveURLQueryParams) => {
-  const currentURL = qs.parse(params);
+}: RemoveUrlQueryParams) => {
+  const currentUrl = qs.parse(params);
 
-  keysToRemove.forEach((key) => delete currentURL[key]);
+  keysToRemove.forEach((key) => {
+    delete currentUrl[key];
+  });
 
   return qs.stringifyUrl(
-    { url: window.location.pathname, query: currentURL },
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
     { skipNull: true }
   );
 };
