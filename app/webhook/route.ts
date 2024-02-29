@@ -61,8 +61,8 @@ if(eventType === 'user.created'){
   
   const mongoUser = await createUser({
     clerkId: id,
-    name:`${first_name}${last_name} ? ` ${last_name}` : ''}`,
-    username : username,
+    name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
+    username: username ,
     email: email_addresses[0].email_addresses,
     picture: image_url,
 
@@ -78,7 +78,7 @@ if(eventType === 'user.updated'){
     clerkId: id,
     updateData: {
 
-      name:`${first_name}${last_name} ? ` ${last_name}` : ''}`,
+      name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
       username : username,
       email: email_addresses[0].email_addresses,
       picture: image_url,
