@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import Filters from "@/components/shared/Filter";
+import Filter from "@/components/shared/Filter";
 
 import { HomePageFilters } from "@/constants/filters";
 import Link from "next/link";
@@ -150,7 +150,7 @@ export default async function Home() {
           otherClasses="flex-1"
         />
 
-        <Filters
+        <Filter
           filters={HomePageFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
           containerClasses="hidden max-md:flex"

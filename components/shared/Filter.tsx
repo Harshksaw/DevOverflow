@@ -22,7 +22,7 @@ interface FilterProps {
   containerClasses?: string;
 }
 
-const Filters = ({ filters, otherClasses, containerClasses }: FilterProps) => {
+const Filter= ({ filters, otherClasses, containerClasses }: FilterProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -69,4 +69,4 @@ const Filters = ({ filters, otherClasses, containerClasses }: FilterProps) => {
   );
 };
 
-export default Filters;
+export default Filter;
