@@ -1,14 +1,12 @@
 'use server'
 
+import { GetQuestionByIdParams, GetQuestionsParams } from "./shared.types";
+
 import Question from "@/database/question.model";
-
-
-import { connectToDatabase } from "../moongoose"
 import Tag from "@/database/tag.model";
 import User from "@/database/user.models";
-import { GetQuestionsParams } from "./shared.types";
+import { connectToDatabase } from "../moongoose"
 import { revalidatePath } from "next/cache";
-
 
 export async function createQuestion(params: any) {
 
@@ -71,6 +69,24 @@ export async function getQuestions(params: GetQuestionsParams) {
       
     } catch (error) {
         console.log(error, "in question.action.ts");
+        
+    }
+}
+
+export async function getQuestionById(params: GetQuestionByIdParams )   {
+    try {
+        connectToDatabase();
+
+        const question = await Question.findById(questionId)
+        .populate({path:'tags', model: Tag, select : '_id name'})
+        .populate({path: 'author', model: User, select: '_id clerkId name picture'})
+        
+
+        
+        
+    } catch (error) {
+        console.log(error, "in question.action.ts");
+        throw error;
         
     }
 }
