@@ -22,6 +22,7 @@ import { createQuestion } from "@/lib/actions/question.action";
 import { z } from "zod";
 import { useRouter } from "next/router";
 import { usePathname } from "next/navigation";
+import { useTheme } from "@/context/ThemeProvider";
 
 const type:any = 'Create'
 interface Props{
@@ -33,6 +34,7 @@ const Question = ({mongoUserId}: Props) => {
 
   const Router = useRouter();
   const pathName = usePathname();
+  const {mode} = useTheme();
 
 
   // tiny MCE
@@ -208,9 +210,9 @@ const Question = ({mongoUserId}: Props) => {
                       "undo redo | " +
                       "codesample | bold italic forecolor | alignleft aligncenter |" +
                       "alignright alignjustify | bullist numlist outdent indent",
-                    content_style: "body { font-family:Inter; font-size:16px }"
-                    // skin: mode === "dark" ? "oxide-dark" : "oxide",
-                    // content_css: mode === "dark" ? "dark" : "light",
+                    content_style: "body { font-family:Inter; font-size:16px }",
+                    skin: mode === "dark" ? "oxide-dark" : "oxide",
+                    content_css: mode === "dark" ? "dark" : "light",
                   }}
                 />
               </FormControl>
