@@ -64,6 +64,7 @@ const page = async ({ params, searchParams }) => {
                         textStyles="small-medium text-dark400_light800"
                     />
                 </div>
+                <ParseHTML
 
             </div>
         </>
