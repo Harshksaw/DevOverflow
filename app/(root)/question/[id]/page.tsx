@@ -1,13 +1,25 @@
 import { formatAndDivideNumber, getTimestamp } from "@/lib/utils"
 
+import AllAnswers from "@/components/shared/AllAnswers"
 import Image from "next/image"
 import Link from "next/link"
 import Metric from "@/components/shared/Metric"
+import { auth } from "@clerk/nextjs"
 import { getQuestionById } from "@/lib/actions/question.action"
 
-const page = async ({ params, searchParams }) => {
+const Page = async ({ params, searchParams }) => {
+    const {userId : clerkId} = auth();
+    let mongoUser;
+
+    if(clerkId){
+        mongoUser = await getQuestionById({questionId : params.id})
+    }
+
+
+
     console.log(params)
     const result = await getQuestionById({ questionId: params.id })
+
 
     return (
         <>
@@ -64,9 +76,17 @@ const page = async ({ params, searchParams }) => {
                         textStyles="small-medium text-dark400_light800"
                     />
                 </div>
-                <ParseHTML
+                {/* <ParseHTML */}
 
             </div>
+
+            <AllAnswers
+            questionId={result._id}
+            userId={JSON.stringify(mongoUser._id)}
+            totalAnswers ={result.answers.length}
+            
+            />
+            {/* <Answer question = {result.content}            /> */}
         </>
     )
 }
