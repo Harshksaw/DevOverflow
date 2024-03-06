@@ -1,7 +1,8 @@
 "use server"
 
+import { GetAnswersParams, QuestionVoteParams } from "./shared.types";
+
 import Answer from "@/database/answer.model";
-import { GetAnswersParams } from "./shared.types";
 import Question from "@/database/question.model";
 import { connectToDatabase } from "../moongoose";
 import { error } from "console";
@@ -46,3 +47,75 @@ export async function getAnswers(params : GetAnswersParams){
         console.log("Error getting answers")
         throw error;
     }}
+
+
+    export async function upVoteQuestion(params: QuestionVoteParams){
+
+        try{
+            connectToDatabase();
+            const { questionId, userId, hasupVoted, hasdownVoted , path} = params;
+
+            let updateQuery={};
+
+            if(hasupVoted){
+                updateQuery = { $pull: { upvotes: userId } } 
+            }else if(hasdownVoted){
+                updateQuery= {
+                    $pull: {downvotes: userId},
+                    $push: {upvotes: userId}
+                }
+            }else{
+                updateQuery = {$addToSet: {upvotes: userId}}
+            }
+            const question = await Question.findByIdAndUpdate(
+                (questionId, updateQuery, {new: true})
+                )
+
+                if(!question){
+                    throw new Error('Question not FOund');
+                }
+
+
+        }catch(err){
+            console.log("Error upvoting answer")
+            throw error;
+
+        }
+    }
+
+
+    export async function downVoteQuestion(params: QuestionVoteParams){
+
+        try{
+            connectToDatabase();
+            const { questionId, userId, hasupVoted, hasdownVoted , path} = params;
+
+            let updateQuery={};
+
+            if(hasdownVoted){
+                updateQuery = { $pull: { downvote: userId } } 
+            }else if(hasdownVoted){
+                updateQuery= {
+                    $pull: {upvotes: userId},
+                    $push: {downvotes: userId}
+                }
+            }else{
+                updateQuery = {$addToSet: {upvotes: userId}}
+            }
+            const question = await Question.findByIdAndUpdate(
+                (questionId, updateQuery, {new: true})
+                )
+
+                if(!question){
+                    throw new Error('Question not FOund');
+                }
+
+                revalidatePath(path);
+
+
+        }catch(err){
+            console.log("Error upvoting answer")
+            throw error;
+
+        }
+    }

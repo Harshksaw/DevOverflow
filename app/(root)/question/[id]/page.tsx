@@ -4,6 +4,7 @@ import AllAnswers from "@/components/shared/AllAnswers"
 import Image from "next/image"
 import Link from "next/link"
 import Metric from "@/components/shared/Metric"
+import Votes from "@/components/shared/Votes"
 import { auth } from "@clerk/nextjs"
 import { getQuestionById } from "@/lib/actions/question.action"
 
@@ -43,7 +44,18 @@ const Page = async ({ params, searchParams }) => {
                         </p>
                     </Link>
                     <div className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
-                        Voting
+                        <Votes
+                        type="Question"
+                        itemId ={JSON.stringify(result._id)}
+                        userId={JSON.stringify(mongoUser._id)}
+                        upvotes ={result.upvotes.length}
+                        hasupVoted={result.upvotes.includes(mongoUser._id)}
+                        downvotes={result.downvotes.length}
+                        hasdownVoted={result.downvotes.includes(mongoUser._id)}
+                        hasSaved={mongoUser?.saved.includes(result._id)}
+                        
+
+                        />
                     </div>
 
 
