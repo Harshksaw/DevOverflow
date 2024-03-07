@@ -1,7 +1,5 @@
 'use server'
 
-import User from "@/database/user.models";
-import { connectToDatabase } from "../moongoose"
 import type {
     CreateUserParams,
     DeleteUserParams,
@@ -11,11 +9,14 @@ import type {
     GetUserStatsParams,
     ToggleSaveQuestionParams,
     UpdateUserParams,
-  } from "./shared.types";
-import { revalidatePath } from "next/cache";
+} from "./shared.types";
+
 import Question from "@/database/question.model";
+import User from "@/database/user.models";
+import { connectToDatabase } from "../moongoose"
 import page from '../../app/(root)/community/page';
-  
+import { revalidatePath } from "next/cache";
+import { ToggleSaveQuestionParams } from './shared.types';
 
 export async function getUserById(params: { userId: string }) {
     try {
@@ -102,6 +103,42 @@ export async function getAllUsers(params :GetAllUsersParams){
   } catch (error) {
     console.log(error);
     throw Error;
+    
+  }
+}
+
+export async function ToggleSaveQuestion(params : ToggleSaveQuestionParams){
+  try {
+    connectToDatabase();
+
+
+    const {userId, questonId , path} = params;
+    const user = await User.findById(userId);
+    if(!user){
+      throw new Error("User not found");
+      }
+      const isQuestionSaved = user.saved.includes(questionId);
+
+      if(isQuestionSaved){
+        await User.findByIdAndUpdate(userId ,
+          {$pull : {saved : questionId }},
+          {new : true}
+          )
+      }
+      else{
+        await User.findByIdAndUpdate(
+          userId, 
+          {$addToSet : {saved: questionId}},
+          {new : true}
+        )
+      }
+
+      revalidatePath(path)
+
+
+  } catch (error) {
+    console.log(error);
+    throw error;
     
   }
 }

@@ -1,6 +1,6 @@
 "use server"
 
-import { GetAnswersParams, QuestionVoteParams } from "./shared.types";
+import { CreateAnswerParams, GetAnswersParams, QuestionVoteParams } from "./shared.types";
 
 import Answer from "@/database/answer.model";
 import Question from "@/database/question.model";

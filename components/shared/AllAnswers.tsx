@@ -1,10 +1,11 @@
 import { AnswerFilters } from "@/constants/filters";
 import Filter from "./Filter";
-import { getAnswers } from "@/lib/actions/answer.action";
-import Link from "next/link";
 import Image from "next/image";
-import { getTimestamp } from "@/lib/utils";
+import Link from "next/link";
 import ParseHTML from "./ParseHTML";
+import Votes from "./Votes";
+import { getAnswers } from "@/lib/actions/answer.action";
+import { getTimestamp } from "@/lib/utils";
 
 interface Props{
     questionId: string;
@@ -64,15 +65,18 @@ const  AllAnswers = async({
                         </Link>
                     </div>
                     <div className="flex justify-end">
-                  {/* <Votes
-                    type="Answer"
-                    itemId={JSON.stringify(answer._id)}
-                    userId={JSON.stringify(userId)}
-                    upvotes={answer.upvotes.length}
-                    hasupVoted={answer.upvotes.includes(userId)}
-                    downvotes={answer.downvotes.length}
-                    hasdownVoted={answer.downvotes.includes(userId)}
-                  /> */}
+                    <Votes
+                        type="Answer"
+                        itemId ={JSON.stringify(answer._id)}
+                        userId={JSON.stringify(userId)}
+                        upvotes ={answer.upvotes.length}
+                        hasupVoted={answer.upvotes.includes(userId)}
+                        downvotes={answer.downvotes.length}
+                        hasdownVoted={answer.downvotes.includes(userId)}
+                        // hasSaved={mongoUser?.saved.includes(result._id)}
+                        
+
+                        />
                 </div>
                 </div>
                 <ParseHTML data={answer.content} />

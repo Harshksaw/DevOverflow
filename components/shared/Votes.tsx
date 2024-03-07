@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import Image from "next/image";
 import React from "react";
+import { ToggleSaveQuestion } from "@/lib/actions/user.action";
 import { formatAndDivideNumber } from "@/lib/utils";
 
 interface Props {
@@ -31,7 +32,14 @@ const Votes = ({
 }: Props) => {
 const pathname = usePathname();
 const router = useRouter();
-const handleSave = ()=>{}
+
+const handleSave = async()=>{
+  await ToggleSaveQuestion({
+    userId :JSON.parse(userId) ,
+    questionId : JSON.parse(itemId),
+    path: pathname,
+  })
+}
 
 const handleVote = async(action: string)=>{
 
