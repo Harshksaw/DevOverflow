@@ -17,6 +17,7 @@ import { connectToDatabase } from "../moongoose"
 import page from '../../app/(root)/community/page';
 import { revalidatePath } from "next/cache";
 import { ToggleSaveQuestionParams } from './shared.types';
+import Tag from "@/database/tag.model";
 
 export async function getUserById(params: { userId: string }) {
     try {
@@ -134,6 +135,39 @@ export async function ToggleSaveQuestion(params : ToggleSaveQuestionParams){
       }
 
       revalidatePath(path)
+
+
+  } catch (error) {
+    console.log(error);
+    throw error;
+    
+  }
+}
+
+export async function getSavedQuestions(params: GetSavedQuestionParams){
+
+  try {
+      connectToDatabase();
+      const { clerkId, page = 1, pageSize = 20, filter, searchQuery} = params;
+      const query = FilterQuery<typeof Question> = searchQuery
+
+      const user = await User.findOne({clerkId}).populate({
+        path: 'saved',
+        match: query,
+        options: {
+          sort: {createdAt: -1},
+        },
+        populate: [
+          {path: 'tags', model :Tag , select: "_id name"},
+          {path: 'author', model : Author, select : '_id clerkId name picture'}
+        ]
+      })
+      if(!user){
+        throw new Error("User not found");
+      }
+
+      const savedQuestions = user.saved;
+      return {questions: savedQuestions}
 
 
   } catch (error) {
