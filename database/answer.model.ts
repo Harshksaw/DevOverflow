@@ -2,7 +2,7 @@ import { Schema, models, model, Document } from "mongoose";
 
 export interface IAnswer extends Document {
     author: Schema.Types.ObjectId;
-    Question: Schema.Type.ObjectId;
+    Question: Schema.Types.ObjectId;
     content:string;
     upvotes:Schema.Types.ObjectId[];
     downvotes: Schema.Types.ObjectId[];
@@ -19,8 +19,8 @@ const AnswerSchema = new Schema({
     },
 
     content: {type: String , required: true},
-    upvotes: [{type: Schema.Type.ObjectId,ref: 'User'}],
-    downvotes: [{type: Schema.Type.ObjectId,ref: 'User'}],
+    upvotes: [{type: Schema.Types.ObjectId,ref: 'User'}],
+    downvotes: [{type: Schema.Types.ObjectId,ref: 'User'}],
     createdAt: {type: Date, default: Date.now}
 
 });
