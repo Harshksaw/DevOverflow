@@ -4,9 +4,10 @@ import { downVoteQuestion, upVoteQuestion } from "@/lib/actions/answer.action";
 import { usePathname, useRouter } from "next/navigation";
 
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { ToggleSaveQuestion } from "@/lib/actions/user.action";
 import { formatAndDivideNumber } from "@/lib/utils";
+import { viewQuestion } from "@/lib/actions/interaction.action";
 
 interface Props {
   type: string;
@@ -91,6 +92,14 @@ const handleVote = async(action: string)=>{
       
       }  
 
+      useEffect(() => {
+        viewQuestion({
+          questionId: JSON.parse(itemId),
+          userId: userId ? JSON.parse(userId) : undefined,
+
+        })
+        alert('viewed question')
+      }, [itemId, userId, pathname, router]);
   
   return (
     <div className="flex gap-5 ">
