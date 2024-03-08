@@ -13,7 +13,7 @@ import { getFormattedJoinedDate } from '@/lib/utils';
 import ProfileLink from '@/components/shared/ProfileLink';
 import { Button } from '@/components/ui/button';
 
-const Page = ({ params, searchParams }: URLProps) => {
+const Page = async({ params, searchParams }: URLProps) => {
     const userInfo = await getUserInfo({ userId: params.id })
     const { userId: clerkId } = auth();
 
