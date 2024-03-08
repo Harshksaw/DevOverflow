@@ -9,9 +9,12 @@ import Image from 'next/image';
 import React from 'react';
 // import Stats from "@/components/shared/Stats";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getFormattedJoinedDate } from '@/lib/utils';
+
 import ProfileLink from '@/components/shared/ProfileLink';
 import { Button } from '@/components/ui/button';
+import QuestionsTab from '@/components/shared/QuestionTab';
+import AnswersTab from '@/components/shared/AnswersTab';
+import { getJoinedDate } from '@/lib/utils';
 
 const Page = async({ params, searchParams }: URLProps) => {
     const userInfo = await getUserInfo({ userId: params.id })
@@ -56,7 +59,7 @@ const Page = async({ params, searchParams }: URLProps) => {
 
               <ProfileLink
                 imgUrl="/assets/icons/calendar.svg"
-                title={getFormattedJoinedDate(userInfo.user.joinedAt)}
+                title={getJoinedDate(userInfo.user.joinedAt)}
               />
             </div>
 
@@ -102,18 +105,18 @@ const Page = async({ params, searchParams }: URLProps) => {
             value="top-posts"
             className="mt-5 flex w-full flex-col gap-6"
           >
-            {/* <QuestionsTab
+            <QuestionsTab
               searchParams={searchParams}
               userId={userInfo.user._id}
               clerkId={clerkId}
-            /> */}
+            />
           </TabsContent>
           <TabsContent value="answers" className="flex w-full flex-col gap-6">
-            {/* <AnswersTab
+             <AnswersTab
               searchParams={searchParams}
               userId={userInfo.user._id}
               clerkId={clerkId}
-            /> */}
+            /> 
           </TabsContent>
         </Tabs>
       </div>

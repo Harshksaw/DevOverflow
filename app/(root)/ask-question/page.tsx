@@ -21,7 +21,7 @@ const Page = async (props: Props) => {
       <h1 className="h1-bold text-dark100_light900">Ask a Question</h1>
 
       <div className="mt-9">
-        {/* <Question type="create" mongoUserId={JSON.stringify(mongoUser._id)} /> */}
+        <Question type="create" mongoUserId={JSON.stringify(mongoUser?._id)} />
       </div>
     </div>
   );
