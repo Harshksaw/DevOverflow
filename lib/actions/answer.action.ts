@@ -1,53 +1,183 @@
-"use server"
+"use server";
 
-import { CreateAnswerParams, GetAnswersParams, QuestionVoteParams } from "./shared.types";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 import Answer from "@/database/answer.model";
 import Question from "@/database/question.model";
-import { connectToDatabase } from "../moongoose";
-import { error } from "console";
-import { revalidatePath } from "next/cache";
+import User from "@/database/user.model";
 
-export async function createAnswer(params: CreateAnswerParams){
-    
-    try{
-        connectToDatabase();
-        const { content, author, question , path} = params;
+import { connectToDatabase } from "@/lib/mongoose";
 
-        const newAnswer = await  Answer.create({
-            content, author, question
+import type {
+  AnswerVoteParams,
+  CreateAnswerParams,
+  EditAnswerParams,
+  GetAnswersParams,
+} from "./shared.types";
 
-        })
+export async function createAnswer(params: CreateAnswerParams) {
+  try {
+    connectToDatabase();
 
-        await Question.findByIdAndUpdate(question, { $push: { answers: newAnswer._id } })
+    const { content, author, question, path } = params;
 
-        //Todo add interaction
+    const newAnswer = await Answer.create({
+      content,
+      author,
+      question,
+      path,
+    });
 
-        revalidatePath(path);
-    }
-    catch{
-        console.log("Error creating answer")
-        throw error;
-    }
+    // add the answer to the question's answers array
+    await Question.findByIdAndUpdate(question, {
+      $push: { answers: newAnswer._id },
+    });
+
+    // todo: create an interaction record for the user's create_answer action
+
+    // todo: author's reputation by +S for creating a answer
+
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 }
 
-export async function getAnswers(params : GetAnswersParams){
-    try{
-        connectToDatabase();
-        const { questionId } = params;
+export async function editAnswer(params: EditAnswerParams) {
+  try {
+    connectToDatabase();
 
-        const answers = await Answer.find({question:questionId})    
-        .populate("author", "_id clerkId name picture")
-        .sort({createdAt : -1})
+    const { answerId, content, path } = params;
 
-        return {answers};
+    const answer = await Answer.findById(answerId);
 
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
 
-    }catch{
-        console.log("Error getting answers")
-        throw error;
-    }}
+    answer.content = content;
 
+    await answer.save();
 
+    redirect(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
+export async function getAnswers(params: GetAnswersParams) {
+  try {
+    connectToDatabase();
 
+    const { questionId } = params;
+
+    const answers = await Answer.find({ question: questionId }).populate(
+      "author",
+      "_id clerkId name picture"
+    );
+
+    return { answers };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function upvoteAnswer(params: AnswerVoteParams) {
+  try {
+    connectToDatabase();
+
+    const { answerId, userId, hasupVoted, hasdownVoted, path } = params;
+
+    let updateQuery = {};
+
+    if (hasupVoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+      };
+    } else if (hasdownVoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { upvotes: userId } };
+    }
+
+    const answer = await Answer.findByIdAndUpdate(answerId, updateQuery, {
+      new: true,
+    });
+
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+
+    if (userId !== answer.author.toString()) {
+      // increment user's reputation by +S for upvoting/revoking an upvote to the answer (S = 2)
+      await User.findByIdAndUpdate(userId, {
+        $inc: { reputation: hasupVoted ? -2 : 2 },
+      });
+
+      // increment author's reputation by +S for upvoting/revoking an upvote to the answer (S = 10)
+      await User.findByIdAndUpdate(answer.author, {
+        $inc: { reputation: hasupVoted ? -10 : 10 },
+      });
+    }
+
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function downvoteAnswer(params: AnswerVoteParams) {
+  try {
+    connectToDatabase();
+
+    const { answerId, userId, hasupVoted, hasdownVoted, path } = params;
+
+    let updateQuery = {};
+
+    if (hasdownVoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+      };
+    } else if (hasupVoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { downvotes: userId } };
+    }
+
+    const answer = await Question.findByIdAndUpdate(answerId, updateQuery, {
+      new: true,
+    });
+
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+
+    if (userId !== answer.author.toString()) {
+      // decrement author's reputation by +S for downvoting/revoking an downvote to the answer (S = 2)
+      await User.findByIdAndUpdate(userId, {
+        $inc: { reputation: hasdownVoted ? -2 : 2 },
+      });
+
+      // decrement author's reputation by +S for downvoting/revoking an downvote to the answer (S = 10)
+      await User.findByIdAndUpdate(answer.author, {
+        $inc: { reputation: hasdownVoted ? -10 : 10 },
+      });
+    }
+
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}

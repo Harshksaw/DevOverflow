@@ -1,150 +1,29 @@
-import { HomePageFilters, QuestionFilters } from "@/constants/filters";
+import { auth } from "@clerk/nextjs";
 
-import { Button } from "@/components/ui/button";
+import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import Filter from "@/components/shared/Filter";
-import HomeFilters from "@/components/shared/home/HomeFilter";
-import Link from "next/link";
-import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import NoResult from "@/components/shared/NoResult";
 import QuestionCard from "@/components/cards/QuestionCard";
-import { UserButton } from "@clerk/nextjs";
-import {auth} from '@clerk/nextjs'
-import { getQuestions } from "@/lib/actions/question.action";
+
 import { getSavedQuestions } from "@/lib/actions/user.action";
 
-const questions = [
-  // Existing questions
-  {
-    _id: "1",
-    title: "Cascading Delete in SQLAAlchemy?",
-    tags: [
-      { _id: "1", name: "python" },
-      { _id: "2", name: "sql" },
-    ],
-    author: {
-      _id: "johnId",
-      name: "John",
-      picture: "john.jpg",
-      clerkId: "clerk1",
-    },
-    upvotes: ["user1", "user2", "user3"],
-    views: 100,
-    answers: [
-      {
-        answerId: "ans1",
-        content: "You can use the cascade option in relationships.",
-      },
-      {
-        answerId: "ans2",
-        content: "Check the SQLAlchemy documentation for more details.",
-      },
-    ],
-    createdAt: new Date("2022-10-10"),
-  },
-  {
-    _id: "2",
-    title: "How to center?",
-    tags: [
-      { _id: "1", name: "python" },
-      { _id: "3", name: "css" },
-    ],
-    author: {
-      _id: "harshId",
-      name: "Harsh",
-      picture: "harsh.jpg",
-      clerkId: "clerk2",
-    },
-    upvotes: ["user4", "user5"],
-    views: 120,
-    answers: [
-      {
-        answerId: "ans3",
-        content: "You can use the text-align property in CSS.",
-      },
-      {
-        answerId: "ans4",
-        content: "Flexbox and Grid layouts also provide centering options.",
-      },
-    ],
-    createdAt: new Date("2021-10-10"),
-  },
-  // New questions
-  {
-    _id: "3",
-    title: "Best IDE for Python development?",
-    tags: [
-      { _id: "1", name: "python" },
-      { _id: "4", name: "ide" },
-    ],
-    author: {
-      _id: "aliceId",
-      name: "Alice",
-      picture: "alice.jpg",
-      clerkId: "clerk3",
-    },
-    upvotes: ["user6", "user7", "user8"],
-    views: 80,
-    answers: [
-      {
-        answerId: "ans5",
-        content: "PyCharm is widely used for Python development.",
-      },
-    ],
-    createdAt: new Date("2022-02-20"),
-  },
-  {
-    _id: "4",
-    title: "Introduction to React Hooks?",
-    tags: [
-      { _id: "5", name: "react" },
-      { _id: "6", name: "hooks" },
-    ],
-    author: {
-      _id: "bobId",
-      name: "Bob",
-      picture: "bob.jpg",
-      clerkId: "clerk4",
-    },
-    upvotes: ["user9", "user10"],
-    views: 150,
-    answers: [
-      {
-        answerId: "ans6",
-        content:
-          "React Hooks are functions that let you use state and other React features.",
-      },
-      {
-        answerId: "ans7",
-        content: "useState and useEffect are commonly used React Hooks.",
-      },
-    ],
-    createdAt: new Date("2022-03-15"),
-  },
-  // Add more questions as needed
-];
+import { QuestionFilters } from "@/constants/filters";
 
 export default async function Home() {
-const {userId} = auth();
-if(!userId) return null;
+  const { userId: clerkId } = auth();
 
-const result = await getSavedQuestions({
-  clerkId: userId,
-});
+  if (!clerkId) return null;
 
-  console.log(result);
-
+  const result = await getSavedQuestions({
+    clerkId,
+  });
 
   return (
     <>
-      <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
-        <h1 className="h1-bold text-dark100_light900">All Questions</h1>
-
-      
-      </div>
-
+      <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
-        <LocalSearchBar
-          route="/"
+        <LocalSearchbar
+          route="/collection"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for questions"
@@ -154,18 +33,16 @@ const result = await getSavedQuestions({
         <Filter
           filters={QuestionFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
-          containerClasses="hidden max-md:flex"
         />
       </div>
 
-
-
       <div className="mt-10 flex w-full flex-col gap-6">
-        {questions.length > 0 ? (
-          questions.map((question) => (
+        {result.questions.length > 0 ? (
+          result.questions.map((question: any) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
+              clerkId={clerkId}
               title={question.title}
               tags={question.tags}
               author={question.author}
@@ -177,10 +54,10 @@ const result = await getSavedQuestions({
           ))
         ) : (
           <NoResult
-            title="There’s no saved question to show"
-            description="Be the first to break the silence! 🚀 Ask a Question and kickstart the discussion. our query could be the next big thing others learn from. Get involved! 💡"
-            link="/ask-question"
-            linkTitle="Ask a Question"
+            title="No Saved Questions Found"
+            description="It appears that there are no saved questions in your collection at the moment 😔. Start exploring and saving questions that pique your interest 🌟"
+            link="/"
+            linkTitle="Explore Questions"
           />
         )}
       </div>

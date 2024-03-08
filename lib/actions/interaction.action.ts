@@ -1,42 +1,38 @@
+"use server";
+
 import Question from "@/database/question.model";
-import { connectToDatabase } from "../moongoose";
-import { ViewQuestionParams } from "./shared.types";
 import Interaction from "@/database/interaction.model";
-import { use } from "react";
+
+import { connectToDatabase } from "@/lib/mongoose";
+
+import type { ViewQuestionParams } from "./shared.types";
 
 export async function viewQuestion(params: ViewQuestionParams) {
-    try {
-        connectToDatabase();
-        const { questionId, userId } = params;
-        //update the view counr for the question
+  try {
+    connectToDatabase();
 
-        await Question.findByIdAndUpdate(questionId, {$inc: {views: 1}});
+    const { questionId, userId } = params;
 
-        //create an interaction record
-        if(userId){
+    // update view count for the question
+    await Question.findByIdAndUpdate(questionId, { $inc: { views: 1 } });
 
-            const existingInteraction = await Interaction.findOne({
-                user: userId,
-                action: 'view',
-                question: questionId,
+    if (userId) {
+      const existingInteraction = await Interaction.findOne({
+        user: userId,
+        action: "view",
+        question: questionId,
+      });
 
-            })
-            if(existingInteraction){
-                return console.log('Question already viewed');
-            }
-            await Interaction.create({
-                user : userId,
-                action: 'view',
-                question: questionId,
-            });
+      if (existingInteraction) return console.log("User has already viewed.");
 
-        }
-
-
-
-    } catch (error) {
-        console.error('Error viewing question', error);
-        throw error;
-        
+      await Interaction.create({
+        user: userId,
+        action: "view",
+        question: questionId,
+      });
     }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 }

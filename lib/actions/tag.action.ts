@@ -1,29 +1,21 @@
-"use server"
+"use server";
 
-import User from "@/database/user.models";
-import { connectToDatabase } from "../moongoose";
-import { GetTopInteractedTagsParams } from "./shared.types";
+import Tag from "@/database/tag.model";
 
+import { connectToDatabase } from "@/lib/mongoose";
 
-export async function getTopInteractedTags(params : GetTopInteractedTagsParams){
-    try {
-      connectToDatabase();
-        const {userId } = params;
+import type { GetAllTagsParams } from "./shared.types";
+import console from "console";
 
-  
-      const user = await User.findById(userId)  
+export async function getAllTags(params: GetAllTagsParams) {
+  try {
+    connectToDatabase();
 
-      if(!user) throw new Error("User not found");
-  
-        //FInd interaction for the user and group by tags...
-        //Interaction...
+    const tags = await Tag.find({});
 
-        return [{_id : '1' , name : "tag"},{ _id : '2' , name : "tag2"},]
-
-  
-    } catch (error) {
-      console.log(error);
-      throw Error;
-      
-    }
+    return { tags };
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
+}

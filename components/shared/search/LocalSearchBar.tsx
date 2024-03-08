@@ -1,9 +1,11 @@
 "use client";
+
+import { useState } from "react";
 import Image from "next/image";
-import React from "react";
+
 import { Input } from "@/components/ui/input";
 
-interface LocalSearchBarProps {
+interface CustomInputProps {
   route: string;
   iconPosition: string;
   imgSrc: string;
@@ -11,46 +13,38 @@ interface LocalSearchBarProps {
   otherClasses: string;
 }
 
-const LocalSearchBar = ({
+const LocalSearchbar = ({
   route,
   iconPosition,
   imgSrc,
   placeholder,
   otherClasses,
-}: LocalSearchBarProps) => {
+}: CustomInputProps) => {
+  const [search, setSearch] = useState("");
+
   return (
     <div
-      className={`background-light800_darkgradient flex items-center min-h-[56px] gap-4 rounded-[10px] px-4  ${otherClasses}`}
+      className={`background-light800_darkgradient flex min-h-[56px] grow  items-center gap-4 rounded-[10px] px-4 ${otherClasses} ${
+        iconPosition === "right" && "flex-row-reverse"
+      }`}
     >
-      {iconPosition === "left" && (
-        <Image
-          src={imgSrc}
-          alt="Search Icon"
-          width={24}
-          height={22}
-          className="cursor-pointer"
-        />
-      )}
+      <Image
+        src={imgSrc}
+        alt="search icon"
+        width={24}
+        height={24}
+        className="cursor-pointer"
+      />
 
       <Input
         type="text"
         placeholder={placeholder}
-        value=""
-        onChange={() => {}}
-        className="paragraph-regular no-focus placeholder text-dark400_light700 border-1px shadow-light-100 outline-none"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="text-dark400_light700 paragraph-regular no-focus placeholder text-dark400_light700 border-none bg-transparent shadow-none outline-none"
       />
-
-      {iconPosition === "right" && (
-        <Image
-          src={imgSrc}
-          alt="Search Icon"
-          width={24}
-          height={25}
-          className="cursor-pointer"
-        />
-      )}
     </div>
   );
 };
 
-export default LocalSearchBar;
+export default LocalSearchbar;
