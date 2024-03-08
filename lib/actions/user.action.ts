@@ -13,15 +13,18 @@ import type {
   DeleteUserParams,
   GetAllUsersParams,
   GetSavedQuestionParams,
+  GetUserByIdParams,
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
+import Answer from "@/database/answer.model";
 
 export async function createUser(userData: CreateUserParams) {
   try {
     connectToDatabase();
 
     const newUser = await User.create(userData);
+    console.log("newUser", newUser);
 
     return newUser;
   } catch (error) {
@@ -84,10 +87,10 @@ export async function getUserById(params: { userId: string }) {
     connectToDatabase();
 
     const { userId } = params;
-
     const user = await User.findOne({
-      clerkId: userId,
+      clerkId : userId,
     });
+    console.log("useracton. ", userId)
 
     return user;
   } catch (error) {
@@ -175,4 +178,36 @@ export async function getSavedQuestions(params: GetSavedQuestionParams) {
     console.log(error);
     throw error;
   }
+}
+
+
+export async function getUserInfo(params: GetUserByIdParams) {
+  
+
+  try {
+    connectToDatabase();
+
+    const { userId } = params;
+    const user = await User.findOne({clerkId: userId})
+    if(!user){
+      throw new Error("User not found");
+    }
+    const totalQuestion = await Question.countDocuments({author: user._id});
+    const totalAnswers = await Answer.countDocuments({author: user._id});
+
+    return{
+      user,
+      totalQuestion,
+      totalAnswers
+    }
+
+
+
+
+
+  }
+    catch (error) {
+      console.log(error);
+      throw error;
+    }
 }
