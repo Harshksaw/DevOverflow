@@ -8,17 +8,20 @@ type Props = {};
 
 const Page = async (props: Props) => {
   const { userId } = auth();
+  console.log(userId)
+
 
   if (!userId) return null;
 
   const mongoUser = await getUserById({ userId });
+  console.log(mongoUser, "mongouseId")
 
   return (
     <div>
       <h1 className="h1-bold text-dark100_light900">Ask a Question</h1>
 
       <div className="mt-9">
-        <Question type="create" mongoUserId={JSON.stringify(mongoUser._id)} />
+        {/* <Question type="create" mongoUserId={JSON.stringify(mongoUser._id)} /> */}
       </div>
     </div>
   );
