@@ -1,13 +1,25 @@
-import { AnswerSchema } from "@/lib/validation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useRef, useState } from "react";
-import { Form, useForm } from "react-hook-form";
-import { z } from "zod";
-import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
+import * as z from "zod";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { useRef, useState } from "react";
+
+import { AnswerValidation } from "@/lib/validation";
+import { Button } from "@/components/ui/button";
 import { Editor } from "@tinymce/tinymce-react";
-import { useTheme } from "@/context/ThemeProvider";
-import { Button } from "../ui/button";
 import Image from "next/image";
+import type { QuestionId } from "@/lib/actions/shared.types";
+import { createAnswer } from "@/lib/actions/answer.action";
+// import { toast } from "@/components/ui/use-toast";
+import { useForm } from "react-hook-form";
+import { usePathname } from "next/navigation";
+import { useTheme } from "@/context/ThemeProvider";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const Answers = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -15,14 +27,12 @@ const Answers = () => {
     const editorRef = useRef(null);
     const { mode } = useTheme();
 
-    const form =
-        useForm <
-        z.infer<typeof AnswerSchema>({
-            resolver: zodResolver(AnswerSchema),
-            defaultValues: {
-                answer: "",
-            },
-        });
+    const form = useForm<z.infer<typeof AnswerValidation>>({
+        resolver: zodResolver(AnswerValidation),
+        defaultValues: {
+          answer:  "",
+        },
+      });
     const handleSubmit = () => {
         console.log("submitting");
     };
@@ -47,10 +57,10 @@ const Answers = () => {
             </Button>
         </div>
 
-            <Form>
+            <Form {...form}>
                 <form
                     className="mt-6 flex w-full flex-col gap-10"
-                    onSubmit={form.handleSubmit(handleCreateAnswer)}
+                    // onSubmit={form.handleSubmit(handleCreateAnswer)}
                 >
                     <FormField
                         control={form.control}

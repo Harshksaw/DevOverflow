@@ -11,13 +11,13 @@ import type {
     UpdateUserParams,
 } from "./shared.types";
 
+import { FilterQuery } from "mongoose";
 import Question from "@/database/question.model";
+import Tag from "@/database/tag.model";
 import User from "@/database/user.models";
 import { connectToDatabase } from "../moongoose"
 import page from '../../app/(root)/community/page';
 import { revalidatePath } from "next/cache";
-import { ToggleSaveQuestionParams } from './shared.types';
-import Tag from "@/database/tag.model";
 
 export async function getUserById(params: { userId: string }) {
     try {
@@ -113,7 +113,7 @@ export async function ToggleSaveQuestion(params : ToggleSaveQuestionParams){
     connectToDatabase();
 
 
-    const {userId, questonId , path} = params;
+    const { userId, questionId, path } = params;
     const user = await User.findById(userId);
     if(!user){
       throw new Error("User not found");
@@ -149,7 +149,7 @@ export async function getSavedQuestions(params: GetSavedQuestionParams){
   try {
       connectToDatabase();
       const { clerkId, page = 1, pageSize = 20, filter, searchQuery} = params;
-      const query = FilterQuery<typeof Question> = searchQuery
+      const query: FilterQuery<typeof Question> = {};
 
       const user = await User.findOne({clerkId}).populate({
         path: 'saved',
@@ -158,9 +158,9 @@ export async function getSavedQuestions(params: GetSavedQuestionParams){
           sort: {createdAt: -1},
         },
         populate: [
-          {path: 'tags', model :Tag , select: "_id name"},
-          {path: 'author', model : Author, select : '_id clerkId name picture'}
-        ]
+          { path: "tags", model: Tag, select: "_id name" },
+          { path: "author", model: User , select: "_id clerkId name picture" },
+        ],
       })
       if(!user){
         throw new Error("User not found");

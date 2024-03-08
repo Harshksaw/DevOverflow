@@ -4,11 +4,12 @@ import AllAnswers from "@/components/shared/AllAnswers"
 import Image from "next/image"
 import Link from "next/link"
 import Metric from "@/components/shared/Metric"
+import { URLProps } from "@/types"
 import Votes from "@/components/shared/Votes"
 import { auth } from "@clerk/nextjs"
 import { getQuestionById } from "@/lib/actions/question.action"
 
-const Page = async ({ params, searchParams }) => {
+const Page = async ({ params, searchParams }: URLProps) => {
     const {userId : clerkId} = auth();
     let mongoUser;
 
@@ -27,7 +28,7 @@ const Page = async ({ params, searchParams }) => {
             <div className="flex-start w-full flex-col">
                 <div className="flex w-full flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
 
-                    <Link href={`/profile/${result.author.clerkId}`}
+                    {/* <Link href={`/profile/${result.author.clerkId}`}
                         className="flex items-center justify-start gap-1"
                     >
                         <Image
@@ -42,9 +43,9 @@ const Page = async ({ params, searchParams }) => {
 
                             {result.author.name}
                         </p>
-                    </Link>
+                    </Link> */}
                     <div className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
-                        <Votes
+                        {/* <Votes
                         type="Question"
                         itemId ={JSON.stringify(result._id)}
                         userId={JSON.stringify(mongoUser._id)}
@@ -55,7 +56,7 @@ const Page = async ({ params, searchParams }) => {
                         hasSaved={mongoUser?.saved.includes(result._id)}
                         
 
-                        />
+                        /> */}
                     </div>
 
 
@@ -63,9 +64,9 @@ const Page = async ({ params, searchParams }) => {
 
                 </div>
                 <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
-                    {result.title}
+                    {/* {result.title} */}
                 </h2>
-                <div>
+                {/* <div>
                     <Metric
                         imgUrl="/assets/icons/clock.svg"
                         alt="clock icon"
@@ -87,17 +88,17 @@ const Page = async ({ params, searchParams }) => {
                         title=" Views"
                         textStyles="small-medium text-dark400_light800"
                     />
-                </div>
+                </div> */}
                 {/* <ParseHTML */}
 
             </div>
 
-            <AllAnswers
+            {/* <AllAnswers
             questionId={result._id}
             userId={JSON.stringify(mongoUser._id)}
             totalAnswers ={result.answers.length}
             
-            />
+            /> */}
             {/* <Answer question = {result.content}            /> */}
         </>
     )

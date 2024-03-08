@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+
 import {
   Form,
   FormControl,
@@ -11,18 +11,19 @@ import {
 } from "@/components/ui/form";
 import React, { useRef } from 'react';
 
+import { Badge } from "../ui/badge";
 import { Button } from "@/components/ui/button";
 import { Editor } from '@tinymce/tinymce-react';
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { QuestionSchema } from "@/lib/validation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Badge } from "../ui/badge";
+import { QuestionValidation } from "@/lib/validation";
 import { createQuestion } from "@/lib/actions/question.action";
-import { z } from "zod";
-import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 import { useTheme } from "@/context/ThemeProvider";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const type:any = 'Create'
 interface Props{
@@ -84,8 +85,8 @@ const Question = ({mongoUserId}: Props) => {
   }
 
 
-  const form = useForm<z.infer<typeof QuestionSchema>>({
-    resolver: zodResolver(QuestionSchema),
+  const form = useForm<z.infer<typeof QuestionValidation >>({
+    resolver: zodResolver(QuestionValidation ),
     defaultValues: {
       title: "",
       explanation: "",
@@ -93,7 +94,7 @@ const Question = ({mongoUserId}: Props) => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof QuestionSchema>) {
+  async function onSubmit(values: z.infer<typeof QuestionValidation >) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     setIsSubmmitting(true);

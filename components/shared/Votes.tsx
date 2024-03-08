@@ -1,6 +1,6 @@
-"use cient";
+"use client";
 
-import { downVoteQuestion, upVoteQuestion } from "@/lib/actions/answer.action";
+import { downVoteQuestion, upVoteQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
 
 import Image from "next/image";
@@ -57,13 +57,14 @@ const handleVote = async(action: string)=>{
         hasdownVoted,
         path: pathname,
       })
-    }else if(action === 'Answer'){
+    }
+    // else if(action === 'Answer'){
       // await upvoteAnswer({
 
       // }
       
       // )
-    }
+    // }
     return;
 
 

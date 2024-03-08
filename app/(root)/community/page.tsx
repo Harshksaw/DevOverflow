@@ -1,13 +1,11 @@
-
-import UserCard from "@/components/cards/Usercard";
-
-import Filter from "@/components/shared/Filter";
-import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { Button } from "@/components/ui/button";
+import Filter from "@/components/shared/Filter";
+import Link from "next/link";
+import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
+import React from "react";
+import UserCard from "@/components/cards/Usercard";
 import { UserFilters } from "@/constants/filters";
 import { getAllUsers } from "@/lib/actions/user.action";
-import Link from "next/link";
-import React from "react";
 
 const page = async () => {
     const result = await getAllUsers({});
@@ -41,8 +39,9 @@ const page = async () => {
         />
       </div>
 
-      <section className="mt-12 flex flex-wrap gap-4">
+      {/* <section className="mt-12 flex flex-wrap gap-4">
         {result.users.length > 0 ?
+
           (
             result.users.map((user) => ( <UserCard key ={user.name} user={user.name} /> )
             ) )
@@ -62,7 +61,7 @@ className="mt-2 font-bold text-accent-blue"
         )
         }
 
-      </section>
+      </section> */}
     </>
   );
 };
