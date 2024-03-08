@@ -13,6 +13,7 @@ import type {
   DeleteUserParams,
   GetAllUsersParams,
   GetSavedQuestionParams,
+  GetUserByIdParams,
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
