@@ -7,6 +7,12 @@ import { BadgeCounts } from "@/types";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+export const getFormattedNumber = (number: number): string => {
+  if (number < 1000) return number.toString(); // Return the same number
+  if (number < 1000000) return `${(number / 1000).toFixed(1)}K`; // Convert to K for number from 1000 < n < 1 million
+  if (number < 1000000000) return `${(number / 1000000).toFixed(1)}M`; // Convert to M for number from 1 million < n < 1 billion
+  return `${(number / 1000000000).toFixed(1)}B`; // Convert to B for number n > 1 billion
+};
 
 export const getTimestamp = (createdAt: Date): string => {
   const now = new Date();
