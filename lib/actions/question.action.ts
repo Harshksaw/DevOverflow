@@ -10,11 +10,16 @@ import { connectToDatabase } from "@/lib/mongoose";
 
 import type {
   CreateQuestionParams,
+  DeleteAnswerParams,
+  DeleteQuestionParams,
   EditQuestionParams,
   GetQuestionByIdParams,
   GetQuestionsParams,
   QuestionVoteParams,
 } from "./shared.types";
+import Answer from "@/database/answer.model";
+import Interaction from "@/database/interaction.model";
+import { Inter } from "next/font/google";
 
 export async function createQuestion(params: CreateQuestionParams) {
   try {
@@ -212,3 +217,58 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
     throw error;
   }
 }
+
+
+
+export async function deleteQuestion(params: DeleteQuestionParams) {
+  try {
+    connectToDatabase();
+
+
+    const { questionId, path } = params;
+
+    await Question.deleteOne({ _id: questionId });
+
+    //delete all answers associated with it
+
+    await Answer.deleteMany({ question: questionId });
+    await Interaction.deleteMany({ question: questionId });
+
+    await Tag.updateMany({questions: questionId}, {$pull: {questions: questionId}});
+
+    revalidatePath(path);
+
+    const question = await
+  }catch(error){
+  console.log(error);
+  throw error;
+  }
+   }
+
+   export async function deleteAnswer(params: DeleteAnswerParams) {
+    try {
+      connectToDatabase();
+  
+  
+      const { answerId, path } = params;
+  
+    const answer = await Answer.findById(answerId);
+    if(!answer){
+      throw new Error("Answer not found");
+    }
+  
+      await Answer.deleteOne({ question: answerId });
+      await Interaction.updateMany({ _id : answer.question }, {$pull : {answers: answerId}});
+  
+      await Interaction.updateMany({ answer : answerId });
+      
+  
+      revalidatePath(path);
+  
+
+    }
+    catch(error){
+    console.log(error);
+    throw error;
+    }
+     }
