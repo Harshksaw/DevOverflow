@@ -3,7 +3,7 @@ import Link from "next/link";
 import RenderTag from "@/components/shared/RenderTag";
 import Metric from "@/components/shared/Metric";
 
-import { getFormattedNumber, getTimestamp } from "@/lib/utils";
+import { getFormattedNumber ,  getTimestamp } from "@/lib/utils";
 
 interface QuestionProps {
   _id: string;
