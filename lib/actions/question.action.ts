@@ -234,41 +234,58 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
     await Answer.deleteMany({ question: questionId });
     await Interaction.deleteMany({ question: questionId });
 
-    await Tag.updateMany({questions: questionId}, {$pull: {questions: questionId}});
+    await Tag.updateMany({ questions: questionId }, { $pull: { questions: questionId } });
 
     revalidatePath(path);
 
     const question = await
-  }catch(error){
-  console.log(error);
-  throw error;
-  }
-   }
-
-   export async function deleteAnswer(params: DeleteAnswerParams) {
-    try {
-      connectToDatabase();
-  
-  
-      const { answerId, path } = params;
-  
-    const answer = await Answer.findById(answerId);
-    if(!answer){
-      throw new Error("Answer not found");
-    }
-  
-      await Answer.deleteOne({ question: answerId });
-      await Interaction.updateMany({ _id : answer.question }, {$pull : {answers: answerId}});
-  
-      await Interaction.updateMany({ answer : answerId });
-      
-  
-      revalidatePath(path);
-  
-
-    }
-    catch(error){
+  } catch (error) {
     console.log(error);
     throw error;
+  }
+}
+
+export async function deleteAnswer(params: DeleteAnswerParams) {
+  try {
+    connectToDatabase();
+
+
+    const { answerId, path } = params;
+
+    const answer = await Answer.findById(answerId);
+    if (!answer) {
+      throw new Error("Answer not found");
     }
-     }
+
+    await Answer.deleteOne({ question: answerId });
+    await Interaction.updateMany({ _id: answer.question }, { $pull: { answers: answerId } });
+
+    await Interaction.updateMany({ answer: answerId });
+
+
+    revalidatePath(path);
+
+
+  }
+  catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+
+export async function getHotQuestions() {
+  try {
+    connectToDatabase();
+
+    const hotQuestions = await Question.find({})
+    .sort({views: -1, upvotes : -1})
+    .limit(5)
+    
+
+    return hotQuestions;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}

@@ -34,6 +34,7 @@ interface Props {
 }
 
 const Question = ({ type, mongoUserId, questionDetails }: Props) => {
+
   const { mode } = useTheme();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -55,6 +56,7 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
   });
 
   async function onSubmit(values: z.infer<typeof QuestionValidation>) {
+    
     setIsSubmitting(true);
 
     try {
