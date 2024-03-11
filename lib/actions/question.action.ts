@@ -238,7 +238,7 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
 
     revalidatePath(path);
 
-    const question = await
+
   } catch (error) {
     console.log(error);
     throw error;
