@@ -8,14 +8,17 @@ import QuestionCard from "@/components/cards/QuestionCard";
 import { getSavedQuestions } from "@/lib/actions/user.action";
 
 import { QuestionFilters } from "@/constants/filters";
+import { SearchParamsProps } from "@/types";
 
-export default async function Home() {
+export default async function Home({searchParams}: SearchParamsProps) {
+
   const { userId: clerkId } = auth();
 
   if (!clerkId) return null;
 
   const result = await getSavedQuestions({
     clerkId,
+    searchQuery: searchParams.q
   });
 
   return (

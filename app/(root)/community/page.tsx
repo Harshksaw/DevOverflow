@@ -6,9 +6,14 @@ import UserCard from "@/components/cards/UserCard";
 import { getAllUsers } from "@/lib/actions/user.action";
 
 import { UserFilters } from "@/constants/filters";
+import { SearchParamsProps } from "@/types";
 
-const Page = async () => {
-  const result = await getAllUsers({});
+export  default async function Page({searchParams}: SearchParamsProps) {
+
+
+  const result = await getAllUsers({
+    searchQuery: searchParams?.searchQuery,
+  });
 
   return (
     <>
@@ -47,4 +52,4 @@ const Page = async () => {
   );
 };
 
-export default Page;
+

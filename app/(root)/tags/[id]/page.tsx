@@ -7,12 +7,15 @@ import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { getQuestionsByTagId } from "@/lib/actions/tag.action";
 
 import type { URLProps } from "@/types";
+import { SearchParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 
-const Page = async ({ params }: Omit<URLProps, "searchParams">) => {
+const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();
 
   const result = await getQuestionsByTagId({
     tagId: params.id,
+    page: 1,
+    searchQuery: searchParams.q
   });
 
   return (
