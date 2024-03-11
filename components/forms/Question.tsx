@@ -33,7 +33,7 @@ interface Props {
   questionDetails?: string;
 }
 
-const Question = ({ type, mongoUserId, questionDetails }: Props) => {
+const Question = ({ type, mongoUserId, questionDetails }: Props)=>{
 
   const { mode } = useTheme();
   const editorRef = useRef(null);
@@ -277,7 +277,8 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
         </Button>
       </form>
     </Form>
-  );
+  )
 };
+
 
 export default Question;
