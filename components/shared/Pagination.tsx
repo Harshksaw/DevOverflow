@@ -31,6 +31,8 @@ const Pagination = ({pageNumber , isNext}: Props) => {
 
     }
 
+    if(!isNext && pageNumber === 1 ) return null;
+
     return (
         <div className=' flex w-full item-center justify-center gap-2'>
             <Button
@@ -44,7 +46,7 @@ const Pagination = ({pageNumber , isNext}: Props) => {
 
             </Button>
             <div className='bg-primary-500 flex justify-center items-center rounded-md bg-primary-500 rounded-md px-3.5 py-2'>
-                <p className=' body-semibold text-slate-200 '>{Props.pageNumber} </p>
+                <p className=' body-semibold text-slate-200 '>{pageNumber} </p>
 
             </div>
             <Button

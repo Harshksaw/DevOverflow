@@ -16,6 +16,7 @@ import type {
   OptionalPage,
   OptionalFilter,
 } from "@/lib/actions/shared.types";
+import Pagination from "./Pagination";
 
 interface Props extends QuestionId, UserId, OptionalPage, OptionalFilter {
   totalAnswers: number;
@@ -79,6 +80,15 @@ const AllAnswers = async ({ userId, questionId, totalAnswers, page ,filter }: Pr
             </article>
           );
         })}
+      </div>
+      <div className="mt-10">
+
+    
+      <Pagination
+      pageNumber={page ? +page : 1}
+      isNext = {result.isNext}
+      
+      />
       </div>
     </div>
   );

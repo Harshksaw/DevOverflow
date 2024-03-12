@@ -9,6 +9,7 @@ import { getSavedQuestions } from "@/lib/actions/user.action";
 
 import { QuestionFilters } from "@/constants/filters";
 import { SearchParamsProps } from "@/types";
+import Pagination from "@/components/shared/Pagination";
 
 export default async function Home({searchParams}: SearchParamsProps) {
 
@@ -19,7 +20,8 @@ export default async function Home({searchParams}: SearchParamsProps) {
   const result = await getSavedQuestions({
     clerkId,
     searchQuery: searchParams.q,
-    filter : searchParams.filter
+    filter : searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
 
   });
 
@@ -66,6 +68,13 @@ export default async function Home({searchParams}: SearchParamsProps) {
           />
         )}
       </div>
+
+      <Pagination
+      pageNumber={searchParams?.page ? +searchParams.page : 1}
+      isNext = {result.isNext}
+      
+      />
+
     </>
   );
 }
