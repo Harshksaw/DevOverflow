@@ -11,14 +11,18 @@ import type {
   GetQuestionByTagIdParams,
 } from "./shared.types";
 import { number } from "prop-types";
+
 import { FilterQuery } from "mongoose";
 
 export async function getAllTags(params: GetAllTagsParams) {
   try {
     connectToDatabase();
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 5} = params;
 
     const query: FilterQuery<typeof Tag> = {};
+    
+    const skipAmount = (page - 1) * pageSize;
+
 
     if (searchQuery) {
       query.$or = [
@@ -45,9 +49,14 @@ export async function getAllTags(params: GetAllTagsParams) {
     }
 
     const tags = await Tag.find(query)
-    .sort(sortOptions);
+    .sort(sortOptions)
+    .skip(skipAmount)
+    .limit(pageSize);
 
-    return { tags };
+    const totalTags = await Tag.countDocuments(query);  
+    const isNext = totalTags > skipAmount + tags.length;
+
+    return { tags ,isNext};
   } catch (error) {
     console.log(error);
     throw error;
@@ -58,13 +67,17 @@ export async function getQuestionsByTagId(params: GetQuestionByTagIdParams) {
   try {
     connectToDatabase();
 
-    const { tagId } = params;
+    const { tagId , page= 1, pageSize= 5} = params;
+
+    const skipAmount = (page - 1)* pageSize;
 
     const tag = await Tag.findOne({ _id: tagId }).populate({
       path: "questions",
       model: Question,
       options: {
         sort: { createdAt: -1 },
+        skip: skipAmount,
+        limit: pageSize + 1,
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
@@ -75,10 +88,14 @@ export async function getQuestionsByTagId(params: GetQuestionByTagIdParams) {
     if (!tag) {
       throw new Error("Tag not found");
     }
-
+    const isNext = tag.questions.length > pageSize;
     const questions = tag.questions;
 
-    return { tagTitle: tag.name, questions };
+
+
+
+    return { tagTitle: tag.name, questions , isNext};
+
   } catch (error) {
     console.log(error);
     throw error;

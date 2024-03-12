@@ -7,13 +7,15 @@ import { getAllUsers } from "@/lib/actions/user.action";
 
 import { UserFilters } from "@/constants/filters";
 import { SearchParamsProps } from "@/types";
+import Pagination from "@/components/shared/Pagination";
 
 export  default async function Page({searchParams}: SearchParamsProps) {
 
 
   const result = await getAllUsers({
     searchQuery: searchParams?.searchQuery,
-    filter: searchParams.filter,
+    filter: searchParams.filter ,
+    page: searchParams.page ? +searchParams.page : 1,
   });
 
   return (
@@ -49,6 +51,17 @@ export  default async function Page({searchParams}: SearchParamsProps) {
           />
         )}
       </section>
+
+<div className="mt-10">
+
+    
+      <Pagination
+      pageNumber={searchParams?.page ? +searchParams.page : 1}
+      isNext = {result.isNext}
+      
+      />
+      </div>
+
     </>
   );
 };
