@@ -13,6 +13,7 @@ export  default async function Page({searchParams}: SearchParamsProps) {
 
   const result = await getAllUsers({
     searchQuery: searchParams?.searchQuery,
+    filter: searchParams.filter,
   });
 
   return (
