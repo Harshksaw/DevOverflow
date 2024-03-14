@@ -1,13 +1,12 @@
 /* eslint-disable no-unused-vars */
 "use client";
 
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-
 import { HomePageFilters } from "@/constants/filters";
 import { formUrlQuery } from "@/lib/utils";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 const HomeFilters = () => {
 const router = useRouter();
@@ -54,7 +53,7 @@ const pathname = usePathname();
               : "bg-light-800 text-light-500 hover:bg-light-800 dark:bg-dark-300 dark:text-light-500 dark:hover:bg-dark-300"
           }`}
 
-            onClickCapture= {()=> handleTypeClick(item.value)}
+            onClickCapture= {()=> handleTypeClick(filter.value)}
 
         >
           {filter.name}

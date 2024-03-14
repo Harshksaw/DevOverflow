@@ -1,13 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
-import Question from "@/database/question.model";
-import Tag from "@/database/tag.model";
-import User from "@/database/user.model";
-
-import { connectToDatabase } from "@/lib/mongoose";
-
 import type {
   CreateQuestionParams,
   DeleteAnswerParams,
@@ -17,10 +9,16 @@ import type {
   GetQuestionsParams,
   QuestionVoteParams,
 } from "./shared.types";
+
 import Answer from "@/database/answer.model";
-import Interaction from "@/database/interaction.model";
-import { Inter } from "next/font/google";
 import { FilterQuery } from "mongoose";
+import { Inter } from "next/font/google";
+import Interaction from "@/database/interaction.model";
+import Question from "@/database/question.model";
+import Tag from "@/database/tag.model";
+import User from "@/database/user.model";
+import { connectToDatabase } from "@/lib/mongoose";
+import { revalidatePath } from "next/cache";
 
 export async function createQuestion(params: CreateQuestionParams) {
   try {
@@ -53,6 +51,15 @@ export async function createQuestion(params: CreateQuestionParams) {
     });
 
     // todo: create an interaction record for the user's ask_question action
+    await Interaction.create({
+      user: author,
+      action : 'ask_question',
+      question: question._id,
+      tags: tagDocuments
+    })
+
+    await User.findByIdAndUpdate(author , {$inc: {reputation : 5}})
+    
 
     // todo: increment author's reputation by +S for creating a question
 
@@ -203,6 +210,17 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
         $inc: { reputation: hasupVoted ? -10 : 10 },
       });
     }
+
+    //Increment author's repuatation by +1 /-1 for upvoting /revoking  and upvote to the question
+
+    await User.findByIdAndUpdate({
+      $inc : {reputation : hasupVoted ? -1 : 1}
+    })
+
+    //Increment author repuration by +10 /10  for reciving an upvote /downvote question
+    await User.findById(question.author, {
+      $inc: {reputation : hasupVoted ? -10 : 10}
+    })
 
     revalidatePath(path);
   } catch (error) {
