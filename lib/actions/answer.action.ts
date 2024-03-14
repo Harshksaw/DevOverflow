@@ -1,20 +1,19 @@
 "use server";
 
-import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
-
-import Answer from "@/database/answer.model";
-import Question from "@/database/question.model";
-import User from "@/database/user.model";
-
-import { connectToDatabase } from "@/lib/mongoose";
-
 import type {
   AnswerVoteParams,
   CreateAnswerParams,
   EditAnswerParams,
   GetAnswersParams,
 } from "./shared.types";
+
+import Answer from "@/database/answer.model";
+import Interaction from "@/database/interaction.model";
+import Question from "@/database/question.model";
+import User from "@/database/user.model";
+import { connectToDatabase } from "@/lib/mongoose";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export async function createAnswer(params: CreateAnswerParams) {
   try {
@@ -30,13 +29,22 @@ export async function createAnswer(params: CreateAnswerParams) {
     });
 
     // add the answer to the question's answers array
-    await Question.findByIdAndUpdate(question, {
+    const questionObject = await Question.findByIdAndUpdate(question, {
       $push: { answers: newAnswer._id },
     });
 
     // todo: create an interaction record for the user's create_answer action
 
+    await Interaction.create({
+      user: author
+      , action : "answer",
+      question ,
+      answer: newAnswer._id,
+      tags: questionObject.tags
+    })
     // todo: author's reputation by +S for creating a answer
+
+    await User.findByIdAndUpdate(author, { $inc: {reputation : 10}})
 
     revalidatePath(path);
   } catch (error) {

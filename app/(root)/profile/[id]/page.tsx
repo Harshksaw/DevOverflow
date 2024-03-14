@@ -1,20 +1,17 @@
-
-
-import { getUserInfo } from '@/lib/actions/user.action';
-import { URLProps } from '@/types';
 import { SignedIn, auth } from '@clerk/nextjs';
-
-import { Link } from 'lucide-react';
-import Image from 'next/image';
-import React from 'react';
-// import Stats from "@/components/shared/Stats";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import ProfileLink from '@/components/shared/ProfileLink';
-import { Button } from '@/components/ui/button';
-import QuestionsTab from '@/components/shared/QuestionTab';
 import AnswersTab from '@/components/shared/AnswersTab';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import { Link } from 'lucide-react';
+import ProfileLink from '@/components/shared/ProfileLink';
+import QuestionsTab from '@/components/shared/QuestionTab';
+import React from 'react';
+import Stats from '@/components/shared/Stats';
+import { URLProps } from '@/types';
 import { getJoinedDate } from '@/lib/utils';
+import { getUserInfo } from '@/lib/actions/user.action';
 
 const Page = async({ params, searchParams }: URLProps) => {
     const userInfo = await getUserInfo({ userId: params.id })
@@ -84,12 +81,12 @@ const Page = async({ params, searchParams }: URLProps) => {
         </div>
       </div>
 
-      {/* <Stats
+      <Stats
         totalQuestions={userInfo.totalQuestions}
         totalAnswers={userInfo.totalAnswers}
         badges={userInfo.badgeCounts}
         reputation={userInfo.reputation}
-      /> */}
+      />
 
       <div className="mt-10 flex gap-10">
         <Tabs defaultValue="top-posts" className="flex-1">
