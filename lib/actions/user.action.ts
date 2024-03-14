@@ -1,13 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
-import { connectToDatabase } from "@/lib/mongoose";
-
-import User from "@/database/user.model";
-import Tag from "@/database/tag.model";
-import Question from "@/database/question.model";
-
 import type {
   CreateUserParams,
   DeleteUserParams,
@@ -18,9 +10,14 @@ import type {
   ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "./shared.types";
+
 import Answer from "@/database/answer.model";
 import { FilterQuery } from "mongoose";
-
+import Question from "@/database/question.model";
+import Tag from "@/database/tag.model";
+import User from "@/database/user.model";
+import { connectToDatabase } from "@/lib/mongoose";
+import { revalidatePath } from "next/cache";
 
 export async function createUser(userData: CreateUserParams) {
   try {
@@ -309,7 +306,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
     const skipAmount = (page - 1) * pageSize;
 
     const userQuestions = await Question.find({ author: userId })
-      .sort({ views: -1 })
+      .sort({ views: -1 ,  createdAt : -1 , upvotes: -1 ,})
       .skip(skipAmount)
       .limit(pageSize)
       .populate([
