@@ -343,7 +343,8 @@ export async function getUserInfo(params: GetUserByIdParams) {
       user,
       totalQuestions,
       totalAnswers,
-      badgeCounts
+      badgeCounts,
+      reputation : user.reputation,
     }
 
 
