@@ -1,6 +1,11 @@
 "use client";
 
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+
 import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Form,
@@ -10,40 +15,38 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { usePathname, useRouter } from "next/navigation";
-
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ProfileSchema } from "@/lib/validations";
-import { Textarea } from "../ui/textarea";
-import { updateUser } from "@/lib/actions/user.action";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
 
-interface Props {
-  clerkId: string;
+import { updateUser } from "@/lib/actions/user.action";
+import { ProfileValidation } from "@/lib/validations";
+
+import type { ClerkId } from "@/lib/actions/shared.types";
+
+interface Props extends ClerkId {
   user: string;
 }
-
 const Profile = ({ clerkId, user }: Props) => {
-  const parsedUser = JSON.parse(user);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const parsedUser = JSON.parse(user);
 
-  const form = useForm<z.infer<typeof ProfileSchema>>({
-    resolver: zodResolver(ProfileSchema),
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const form = useForm<z.infer<typeof ProfileValidation>>({
+    resolver: zodResolver(ProfileValidation),
     defaultValues: {
-      name: parsedUser.name || "",
-      username: parsedUser.username || "",
-      portfolioWebsite: parsedUser.portfolioWebsite || "",
-      location: parsedUser.location || "",
-      bio: parsedUser.bio || "",
+      name: parsedUser?.name || "",
+      username: parsedUser?.username || "",
+      portfolioWebsite: parsedUser?.portfolioWebsite || "",
+      location: parsedUser?.location || "",
+      bio: parsedUser?.bio || "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof ProfileSchema>) {
+  async function onSubmit(values: z.infer<typeof ProfileValidation>) {
     setIsSubmitting(true);
 
     try {
@@ -55,15 +58,26 @@ const Profile = ({ clerkId, user }: Props) => {
           portfolioWebsite: values.portfolioWebsite,
           location: values.location,
           bio: values.bio,
+          onboarded: true,
         },
         path: pathname,
       });
 
-      router.back();
+      router.push("/");
     } catch (error) {
+      toast({
+        title: "Error updating profile ⚠️",
+        variant: "destructive",
+      });
+
       console.log(error);
     } finally {
       setIsSubmitting(false);
+
+      toast({
+        title: "Profile updated successfully 🎉",
+        variant: "default",
+      });
     }
   }
 
@@ -92,6 +106,7 @@ const Profile = ({ clerkId, user }: Props) => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="username"
@@ -111,6 +126,7 @@ const Profile = ({ clerkId, user }: Props) => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="portfolioWebsite"
@@ -122,7 +138,7 @@ const Profile = ({ clerkId, user }: Props) => {
               <FormControl>
                 <Input
                   type="url"
-                  placeholder="Your portfolio URL"
+                  placeholder="Your portfolio url"
                   className="no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />
@@ -142,7 +158,7 @@ const Profile = ({ clerkId, user }: Props) => {
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Where are you from?"
+                  placeholder="Your location"
                   className="no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />
@@ -158,11 +174,11 @@ const Profile = ({ clerkId, user }: Props) => {
           render={({ field }) => (
             <FormItem className="space-y-3.5">
               <FormLabel className="paragraph-semibold text-dark400_light800">
-                Bio <span className="text-primary-500">*</span>
+                Bio
               </FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="What's special about you?"
+                  placeholder="Tell us about yourself"
                   className="no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px] border"
                   {...field}
                 />

@@ -22,19 +22,24 @@ interface Props extends QuestionId, UserId, OptionalPage, OptionalFilter {
   totalAnswers: number;
 }
 
-const AllAnswers = async ({ userId, questionId, totalAnswers, page ,filter }: Props) => {
+const AllAnswers = async ({
+  userId,
+  questionId,
+  totalAnswers,
+  filter,
+  page,
+}: Props) => {
   const result = await getAnswers({
     questionId,
     page: page ? +page : 1,
     sortBy: filter,
-
   });
 
   return (
     <div className="mt-11">
       <div className="flex items-center justify-between">
         <h3 className="primary-text-gradient">{totalAnswers} Answers</h3>
-        <Filter filters={AnswerFilters}  />
+        <Filter filters={AnswerFilters} />
       </div>
       <div>
         {result.answers.map((answer: any) => {
@@ -82,13 +87,7 @@ const AllAnswers = async ({ userId, questionId, totalAnswers, page ,filter }: Pr
         })}
       </div>
       <div className="mt-10">
-
-    
-      <Pagination
-      pageNumber={page ? +page : 1}
-      isNext = {result.isNext}
-      
-      />
+        <Pagination pageNumber={page ? +page : 1} isNext={result.isNext} />
       </div>
     </div>
   );
