@@ -89,6 +89,32 @@ const Answer = ({
     }
   }
 
+  const genrateAnswer = async()=>{
+    if(!authorId) return;
+
+    setIsSubmittingAi(true);
+    try {
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chatgpt`,{
+        method: 'POST',
+        body:JSON.stringify({question})
+
+      })
+      const aiAnswer = await response.json()
+
+      alert(aiAnswer.answer)
+
+      
+    } catch (error) {
+      setIsSubmittingAi(false)
+    }
+    finally{
+      setIsSubmittingAi(false)
+    }
+  
+  }
+
+
   return (
     <div>
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
@@ -100,7 +126,7 @@ const Answer = ({
 
         <Button
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
-          onClick={() => {}}
+          onClick={genrateAnswer}
         >
           <Image
             src="/assets/icons/stars.svg"
