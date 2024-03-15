@@ -63,6 +63,7 @@ export async function POST(req: Request) {
     const parts = email_addresses[0].email_address.split("@");
 
     // create a new user in database
+    console.log("creating User ROute.ts->")
     const mongoUser = await createUser({
       clerkId: id,
       name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
@@ -70,7 +71,8 @@ export async function POST(req: Request) {
       email: email_addresses[0].email_address,
       picture: image_url,
     });
-
+    
+    console.log("created User ROute.ts->")
     console.log(mongoUser);
 
     return NextResponse.json({ message: "User created", user: mongoUser });
