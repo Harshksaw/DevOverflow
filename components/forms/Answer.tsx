@@ -89,7 +89,7 @@ const Answer = ({
     }
   }
 
-  const genrateAnswer = async()=>{
+  const generateAnswer = async()=>{
     if(!authorId) return;
 
     setIsSubmittingAi(true);
@@ -102,7 +102,13 @@ const Answer = ({
       })
       const aiAnswer = await response.json()
 
-      alert(aiAnswer.answer)
+      const formattedAnswer = aiAnswer.reply.replace(/\n/g , '<br/>');
+
+      if(editorRef.current){
+        const editor = editorRef.current as any;
+        editor.setContent(formattedAnswer);
+      }
+      //Toast generating aswer
 
       
     } catch (error) {
@@ -123,20 +129,34 @@ const Answer = ({
             Write you answer here
           </h4>
         )}
-
-        <Button
-          className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
-          onClick={genrateAnswer}
+          <Button
+        className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
+        onClick={generateAnswer}
         >
+    {
+      isSubmittingAi ? (
+
+
+        <>
+        Generating...
+        
+        </>
+      ):
+       (
+          <>
+      
           <Image
             src="/assets/icons/stars.svg"
             alt="star"
             width={12}
             height={12}
             className={`object-contain ${isSubmittingAi && "animate-pulse"}`}
-          />
+            />
           {isSubmittingAi ? "Generating..." : "Generate AI Answer"}
-        </Button>
+       
+        </>
+      )}
+       </Button>
       </div>
 
       <Form {...form}>
