@@ -89,6 +89,38 @@ const Answer = ({
     }
   }
 
+  const generateAnswer = async()=>{
+    if(!authorId) return;
+
+    setIsSubmittingAi(true);
+    try {
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chatgpt`,{
+        method: 'POST',
+        body:JSON.stringify({question})
+
+      })
+      const aiAnswer = await response.json()
+
+      const formattedAnswer = aiAnswer.reply.replace(/\n/g , '<br/>');
+
+      if(editorRef.current){
+        const editor = editorRef.current as any;
+        editor.setContent(formattedAnswer);
+      }
+      //Toast generating aswer
+
+      
+    } catch (error) {
+      setIsSubmittingAi(false)
+    }
+    finally{
+      setIsSubmittingAi(false)
+    }
+  
+  }
+
+
   return (
     <div>
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
@@ -97,20 +129,34 @@ const Answer = ({
             Write you answer here
           </h4>
         )}
-
-        <Button
-          className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
-          onClick={() => {}}
+          <Button
+        className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
+        onClick={generateAnswer}
         >
+    {
+      isSubmittingAi ? (
+
+
+        <>
+        Generating...
+        
+        </>
+      ):
+       (
+          <>
+      
           <Image
             src="/assets/icons/stars.svg"
             alt="star"
             width={12}
             height={12}
             className={`object-contain ${isSubmittingAi && "animate-pulse"}`}
-          />
+            />
           {isSubmittingAi ? "Generating..." : "Generate AI Answer"}
-        </Button>
+       
+        </>
+      )}
+       </Button>
       </div>
 
       <Form {...form}>
