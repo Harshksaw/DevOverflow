@@ -7,26 +7,56 @@ import NoResult from "@/components/shared/NoResult";
 import HomeFilters from "@/components/home/HomeFilters";
 import QuestionCard from "@/components/cards/QuestionCard";
 
-import { getQuestions } from "@/lib/actions/question.action";
+import { getQuestions, getRecommendedQuestions } from "@/lib/actions/question.action";
 
 import { HomePageFilters } from "@/constants/filters";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination";
 
+import type { Metadata } from "next";
+import { auth } from "@clerk/nextjs";
+
+export const metadata: Metadata = {
+  title: "DevOverflow | harsh",
+
+  description: "My name is harsh and I am a software developer. Contact me at [email protected] or visit my portfolio at [portfolio link]. You can also find me on GitHub at [GitHub link].",
+  // contact: {
+  //   email: "email@example.com",
+  //   portfolio: "https://example.com/portfolio",
+  //   github: "https://github.com/username"
+  // }
+}
+
 export default async function Home({searchParams}: SearchParamsProps) {
 
-  const result = await getQuestions({
-    searchQuery : searchParams.q,
-    filter: searchParams.filter,
-    page: searchParams.page ? +searchParams.page : 1,
-  })
-  
+  const {userId} = auth();
+    let result;
+
+    if(searchParams.filter === "recommended"){
+      if(userId){
+        result = await getRecommendedQuestions({
+          userId,
+
+          searchQuery : searchParams.q,
+          page: searchParams.page ? +searchParams.page : 1,
+        })
+      }else{
+        result = {
+          questions: [],
+          isNext: false
+        }
+      }
+
+    }else{
+
+     result =  await getQuestions({
+        searchQuery : searchParams.q,
+        filter: searchParams.filter,
+        page: searchParams.page ? +searchParams.page : 1,
+      })
+      
+    }
   //fetch recommended
-
-
-  
-
-
 
   return (
     <>
