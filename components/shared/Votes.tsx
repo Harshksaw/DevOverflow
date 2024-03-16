@@ -14,6 +14,7 @@ import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import { getFormattedNumber } from "@/lib/utils";
 
 import type { UserId, Voting } from "@/lib/actions/shared.types";
+import { toast } from "../ui/use-toast";
 
 interface Props extends UserId, Voting {
   type: string;
@@ -48,12 +49,19 @@ const Votes = ({
       userId: JSON.parse(userId),
       questionId: JSON.parse(itemId),
       path: pathname,
-    });
+    })
+    return toast({
+      title: `Question ${!hasSaved ?  'Saved in' : 'Removed from'} your collection`,
+      variant: !hasSaved ? 'default': 'destructive'
+    })
   };
 
   const handleVote = async (action: string) => {
     if (!userId) {
-      return;
+      return toast({
+        title: 'please log in',
+        description: 'you must be logged in to perform this action',
+      });
     }
 
     if (action === "upvote") {
@@ -74,6 +82,10 @@ const Votes = ({
           path: pathname,
         });
       }
+      return toast({
+        title: `Upvote ${!hasupVoted? 'Successfull' : 'Removed'}`,
+        variant :  !hasupVoted ? 'default': 'destructive'
+      });
     }
 
     if (action === "downvote") {
@@ -94,6 +106,10 @@ const Votes = ({
           path: pathname,
         });
       }
+      return toast({
+        title: `Upvote ${!hasdownVoted? 'DownVoted' : 'Removed'}`,
+        variant :  !hasdownVoted ? 'default': 'destructive'
+      });
     }
   };
 
